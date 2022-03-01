@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Student Tracker</string>
+    <string name="Open">Student Tracker</string>
+    <string name="Close">Student Tracker</string>
+</resources>
