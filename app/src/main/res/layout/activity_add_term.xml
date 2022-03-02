@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="72dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -29,12 +29,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+        android:onClick="openStartDatePicker"
         android:text="Start Date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.434"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termName"
-        android:onClick="openStartDatePicker"/>
+        app:layout_constraintTop_toBottomOf="@+id/termName" />
 
     <TextView
         android:id="@+id/endDate"
@@ -44,22 +45,81 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="150dp"
         android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+        android:onClick="openEndDatePicker"
         android:text="End Date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.434"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termName"
-        android:onClick="openEndDatePicker"/>
+        app:layout_constraintTop_toBottomOf="@+id/termName" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="159dp"
-        android:layout_marginTop="189dp"
+        android:layout_marginTop="51dp"
         android:layout_marginEnd="164dp"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+    <Button
+        android:id="@+id/addCourse"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="67dp"
+        android:text=""
+        app:icon="@drawable/add"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tableLayout" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="250dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="51dp"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toStartOf="@+id/addCourse"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/courses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="154dp"
+        android:layout_marginBottom="27dp"
+        android:text="Courses"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDate" />
 
