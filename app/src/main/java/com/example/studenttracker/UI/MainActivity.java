@@ -7,24 +7,32 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
 import com.example.studenttracker.Database.Repository;
+import com.example.studenttracker.Models.Course;
+import com.example.studenttracker.Models.Instructor;
 import com.example.studenttracker.Models.Term;
 import com.example.studenttracker.R;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     public DrawerLayout navDrawer;
     public ActionBarDrawerToggle drawerToggle;
+
 
 
     @Override
@@ -44,10 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
         final NavigationView nav_View = findViewById(R.id.nav);
 
-        Repository repo = new Repository(getApplication());
-        Term test = new Term(null,"Test Class", LocalDateTime.now(), LocalDateTime.now());
-        repo.insertTerm(test);
 
+        //This is just test data and can be removed later.
+        Repository repo = new Repository(getApplication());
+        Term test = new Term(1,"Test Class", "testDate", "endTestDate");
+        repo.insertTerm(test);
 
 
         nav_View.setNavigationItemSelectedListener(item -> {
@@ -82,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+
     }
 
 

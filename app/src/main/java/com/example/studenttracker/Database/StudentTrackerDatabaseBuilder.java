@@ -32,7 +32,7 @@ public abstract class StudentTrackerDatabaseBuilder extends RoomDatabase {
         if (INSTANCE == null) {
 
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(), StudentTrackerDatabaseBuilder.class, "studentTracker.db")
-                    //If wanting to run query's on MainThread add but it will lock up the main system.
+                    //If wanting to run query's on MainThread add this but it will lock up the main system.
                     //.allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build();

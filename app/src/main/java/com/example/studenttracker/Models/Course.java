@@ -6,17 +6,17 @@ import androidx.room.PrimaryKey;
 import java.time.LocalDateTime;
 
 @Entity(tableName = "courses")
-public abstract class Course {
+public class Course {
     @PrimaryKey(autoGenerate = true)
     private int courseID;
 
     private String title;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String startDate;
+    private String endDate;
     private String status;
 
 
-    public Course(int courseID, String title, LocalDateTime startDate, LocalDateTime endDate,String status) {
+    public Course(int courseID, String title, String startDate, String endDate,String status) {
         this.courseID = courseID;
         this.title = title;
         this.startDate = startDate;
@@ -40,19 +40,19 @@ public abstract class Course {
         this.title = title;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

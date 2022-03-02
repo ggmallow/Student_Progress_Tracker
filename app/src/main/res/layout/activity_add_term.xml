@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <TextView
         android:id="@+id/startDate"
         style="?android:spinnerStyle"
         android:layout_width="250dp"
@@ -33,9 +33,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.434"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termName" />
+        app:layout_constraintTop_toBottomOf="@+id/termName"
+        android:onClick="openStartDatePicker"/>
 
-    <Button
+    <TextView
         android:id="@+id/endDate"
         style="?android:spinnerStyle"
         android:layout_width="250dp"
@@ -47,7 +48,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.434"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termName" />
+        app:layout_constraintTop_toBottomOf="@+id/termName"
+        android:onClick="openEndDatePicker"/>
 
     <Button
         android:id="@+id/button"

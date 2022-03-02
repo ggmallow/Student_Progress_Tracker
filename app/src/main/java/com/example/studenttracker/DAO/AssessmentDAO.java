@@ -1,5 +1,6 @@
 package com.example.studenttracker.DAO;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -11,6 +12,7 @@ import com.example.studenttracker.Models.Term;
 
 import java.util.List;
 
+@Dao
 public interface AssessmentDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

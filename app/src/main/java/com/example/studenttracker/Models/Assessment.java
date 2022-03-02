@@ -14,9 +14,9 @@ public class Assessment {
 
     private String assessmentType;
     private String assessmentTitle;
-    private LocalDateTime endDate;
+    private String endDate;
 
-    public Assessment(int assessmentID, String assessmentType, String assessmentTitle, LocalDateTime endDate) {
+    public Assessment(int assessmentID, String assessmentType, String assessmentTitle, String endDate) {
         this.assessmentID = assessmentID;
         this.assessmentType = assessmentType;
         this.assessmentTitle = assessmentTitle;
@@ -47,11 +47,11 @@ public class Assessment {
         this.assessmentTitle = assessmentTitle;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
