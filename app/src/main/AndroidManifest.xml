@@ -23,7 +23,7 @@
         <activity
             android:name=".UI.AddTerm"
             android:exported="false"
-            android:label="Assessment"
+            android:label="Terms"
             android:parentActivityName=".UI.Assessments"/>
         <activity
             android:name=".UI.Courses"
