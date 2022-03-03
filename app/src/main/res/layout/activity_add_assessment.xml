@@ -8,7 +8,7 @@
 
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/assessmentType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
@@ -40,10 +40,10 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:minHeight="48dp"
-        android:text="Title"
+        android:hint="Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/assessmentType" />
 
     <TextView
         android:id="@+id/startDate"
@@ -54,7 +54,7 @@
         android:ems="10"
         android:inputType="date"
         android:minHeight="48dp"
-        android:text="Pick a Start Date"
+        android:hint="Pick a Start Date"
         android:onClick="openStartDatePicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
         android:ems="10"
         android:inputType="date"
         android:minHeight="48dp"
-        android:text="Pick a End Date"
+        android:hint="Pick a End Date"
         android:onClick="openEndDatePicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:text="Save"
+        android:onClick="saveAssessment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDate" />

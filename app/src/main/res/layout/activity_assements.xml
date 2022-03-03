@@ -28,6 +28,7 @@
 
 
         <TableLayout
+            android:id="@+id/allAssessments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
@@ -37,9 +38,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TableRow
+                android:id="@+id/assessmentTitle"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
 
+                android:layout_height="38dp"
                 android:background="@color/cardview_dark_background">
 
                 <TextView

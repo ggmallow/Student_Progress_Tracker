@@ -5,21 +5,43 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.studenttracker.Database.Repository;
+import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class AddAssessment extends AppCompatActivity {
 
-    private TextView getStart;
-    private TextView getEnd;
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
     public DatePickerDialog datePickerDialog2;
+
+
+//IDs for form
+    public RadioGroup assessmentType;
+    public String tempAssessmentType;
+    public RadioButton objective; //Setting assessmentType
+    public RadioButton performance; //Setting assessmentType
+    public EditText assessmentTitle; // Setting assessmentTitle
+    private TextView getStart; //Setting Start Date
+    private TextView getEnd; //Setting End Date
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +114,6 @@ public class AddAssessment extends AppCompatActivity {
     }
 
 
-
     private String getMonthFormat(int month) {
         if (month == 1) {
             return "JAN";
@@ -132,5 +153,68 @@ public class AddAssessment extends AppCompatActivity {
         }
         return "JAN"; //This statement should never be reached.
 
+    }
+
+    public void saveAssessment(View view) throws ParseException {
+        assessmentType = findViewById(R.id.assessmentType);
+        performance = findViewById(R.id.performance);
+        objective = findViewById(R.id.objective);
+        assessmentTitle = findViewById(R.id.assessmentTitle);
+        getStart = findViewById(R.id.startDate);
+        getEnd = findViewById(R.id.endDate);
+
+
+        if (assessmentType.getCheckedRadioButtonId() == -1) {
+            Toast.makeText(this, "You must select the Assessment Type", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (performance.isChecked()) {
+            tempAssessmentType = "Performance";
+        } else if (objective.isChecked()) {
+            tempAssessmentType = "Objective";
+        }
+
+        if (assessmentTitle.getText().toString().isEmpty()) {
+            Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (assessmentTitle.getText().toString().length() > 25) {
+            Toast.makeText(this, "Please choose a title 25 or less characters.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (getStart.getText().toString().isEmpty()) {
+            Toast.makeText(this, "You must pick a Start Date", Toast.LENGTH_LONG).show();
+            return;
+        }
+        /*
+//This is not complete
+        if (getStart.getText().toString().length() > 0 && getEnd.getText().toString().length() > 0) {
+            Toast.makeText(this, "This will contain logic for date checking.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        */
+
+        if (getEnd.getText().toString().isEmpty()) {
+            Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
+
+        } else {
+
+            //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
+            Repository repo = new Repository(getApplication());
+            Assessment newAssessment = new Assessment(0,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+            repo.insertAssessment(newAssessment);
+            Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
+        }
+
+
+
+
+
+        /* This is how we call to save new Assessment when ready.
+        *   Repository repo = new Repository(getApplication());
+        Term test = new Term(1,"Test Class", "testDate", "endTestDate");
+        repo.insertTerm(test);
+        * */
     }
 }

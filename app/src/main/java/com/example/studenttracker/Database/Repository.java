@@ -86,6 +86,55 @@ public class Repository {
         return mAllTerms;
     }
 
+//This section of code will be for Assessments
 
+    //This inserts a Assessment into the database.
+    public void insertAssessment(Assessment assessment){
+        databaseExecutor.execute(()->{
+            mAssessmentDAO.insertAssessment(assessment);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //This will update a Assessment.
+    public void updateAssessment(Assessment assessment){
+        databaseExecutor.execute(()->{
+            mAssessmentDAO.updateAssessment(assessment);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //This will delete a Assessment.
+    public void deleteAssessment(Assessment assessment){
+        databaseExecutor.execute(()->{
+            mAssessmentDAO.deleteAssessment(assessment);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //This will get all Assessments.
+    public List<Assessment>getAllAssessments() {
+        databaseExecutor.execute(()->{
+            mAllAssessments = mAssessmentDAO.getAllAssessments();
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mAllAssessments;
+    }
 
 }

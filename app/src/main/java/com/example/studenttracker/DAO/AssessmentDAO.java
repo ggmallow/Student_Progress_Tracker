@@ -19,12 +19,12 @@ public interface AssessmentDAO {
     void insertAssessment(Assessment assessment);
 
     @Update
-    void updateCourse(Assessment assessment);
+    void updateAssessment(Assessment assessment);
 
     @Delete
-    void deleteCourse(Assessment assessment);
+    void deleteAssessment(Assessment assessment);
 
     @Query("SELECT * FROM assessments ORDER BY assessmentID ASC")
-    List<Term> getAllAssessments();
+    List<Assessment> getAllAssessments();
 
 }

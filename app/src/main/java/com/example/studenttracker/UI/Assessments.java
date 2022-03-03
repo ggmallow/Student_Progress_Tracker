@@ -5,16 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TableLayout;
 
+import com.example.studenttracker.Database.Repository;
+import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.R;
 
 public class Assessments extends AppCompatActivity {
+    TableLayout allAssessments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assements);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 
     public void addAssessment(View view) {
