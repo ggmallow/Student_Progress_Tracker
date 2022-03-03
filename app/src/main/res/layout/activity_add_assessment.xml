@@ -35,9 +35,9 @@
 
     <EditText
         android:id="@+id/assessmentTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:minHeight="48dp"
         android:text="Title"
@@ -45,29 +45,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-    <Button
-        android:id="@+id/editTextDate"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/startDate"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         style="?android:spinnerStyle"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:text="Pick a Start Date"
+        android:onClick="openStartDatePicker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assessmentTitle" />
+
+    <TextView
+        android:id="@+id/endDate"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        style="?android:spinnerStyle"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:inputType="date"
         android:minHeight="48dp"
         android:text="Pick a End Date"
+        android:onClick="openEndDatePicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/assessmentTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/startDate" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+        app:layout_constraintTop_toBottomOf="@+id/endDate" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
