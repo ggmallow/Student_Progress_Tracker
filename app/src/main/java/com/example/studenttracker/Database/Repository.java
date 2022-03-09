@@ -22,7 +22,7 @@ public class Repository {
 
     private List<Term> mAllTerms;
     private List<Course> mAllCourses;
-    private List<Assessment> mAllAssessments;
+    public List<Assessment> mAllAssessments;
 
     private static int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -135,6 +135,57 @@ public class Repository {
             e.printStackTrace();
         }
         return mAllAssessments;
+    }
+
+//This section of code will be for Courses.
+
+//This inserts a Course into the database.
+public void insertCourse(Course course){
+    databaseExecutor.execute(()->{
+        mCourseDAO.insertCourse(course);
+    });
+    try {
+        Thread.sleep(1000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+
+    //This will update a Course.
+    public void updateCourse(Course course){
+        databaseExecutor.execute(()->{
+            mCourseDAO.updateCourse(course);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //This will delete a Course.
+    public void deleteCourse(Course course){
+        databaseExecutor.execute(()->{
+            mCourseDAO.deleteCourse(course);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //This will get all Courses.
+    public List<Course>getAllCourses() {
+        databaseExecutor.execute(()->{
+            mAllCourses = mCourseDAO.getAllCourses();
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mAllCourses;
     }
 
 }

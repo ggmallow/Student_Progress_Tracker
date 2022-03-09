@@ -133,7 +133,7 @@
                     android:layout_marginTop="60dp"
                     android:layout_marginEnd="13dp"
                     android:ems="10"
-                    android:text="Course Notes (optional)"
+                    android:hint="Course Notes (optional)"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/instructorEmail" />

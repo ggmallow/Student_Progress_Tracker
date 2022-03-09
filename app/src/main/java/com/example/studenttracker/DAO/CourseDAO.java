@@ -26,5 +26,5 @@ public interface CourseDAO {
     void deleteCourse(Course course);
 
     @Query("SELECT * FROM courses ORDER BY courseID ASC")
-    List<Term> getAllCourse();
+    List<Course> getAllCourses();
 }
