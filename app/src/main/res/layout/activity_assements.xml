@@ -29,8 +29,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/allAssessmentsRecycler"
-            android:layout_width="match_parent"
+            android:layout_width="375dp"
             android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,11 +41,6 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button" />
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
