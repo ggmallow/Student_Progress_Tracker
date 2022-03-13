@@ -60,6 +60,13 @@ public class AddAssessment extends AppCompatActivity {
         initEndDatePicker(); //Sets up the date picker for End Date.
 
         //Setting up for Modding an Assessment
+        modAssessmentInit();
+
+
+
+    }
+//Method that provides all data to the form, if navigating from edit button.
+    private void modAssessmentInit() {
         moddingAssessment = getIntent().getExtras();
         if (moddingAssessment != null) {
             int passedPosition = moddingAssessment.getInt("moddingAssessment");
@@ -84,19 +91,18 @@ public class AddAssessment extends AppCompatActivity {
                     allAssessments.get(passedPosition).getAssessmentTitle(),
                     allAssessments.get(passedPosition).getStartDate(),
                     allAssessments.get(passedPosition).getEndDate());
-                    modID = modAssessment.getAssessmentID();
+            modID = modAssessment.getAssessmentID();
 
-        if (modAssessment.getAssessmentType().equals("Performance")) {
-            performance.setChecked(true);
-        } else {
-            objective.setChecked(true);
+            if (modAssessment.getAssessmentType().equals("Performance")) {
+                performance.setChecked(true);
+            } else {
+                objective.setChecked(true);
+            }
+            assessmentTitle.setText(modAssessment.getAssessmentTitle());
+            getStart.setText(modAssessment.getStartDate());
+            getEnd.setText(modAssessment.getEndDate());
+
         }
-        assessmentTitle.setText(modAssessment.getAssessmentTitle());
-        getStart.setText(modAssessment.getStartDate());
-        getEnd.setText(modAssessment.getEndDate());
-
-        }
-
 
     }
 
