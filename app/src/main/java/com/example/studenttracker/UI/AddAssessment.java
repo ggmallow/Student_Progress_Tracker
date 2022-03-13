@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -32,6 +33,8 @@ public class AddAssessment extends AppCompatActivity {
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
     public DatePickerDialog datePickerDialog2;
+
+    public ArrayList<Assessment> allAssessments = new ArrayList<>();
 
 
 //IDs for form
@@ -43,6 +46,9 @@ public class AddAssessment extends AppCompatActivity {
     private TextView getStart; //Setting Start Date
     private TextView getEnd; //Setting End Date
 
+    public Bundle moddingAssessment;
+    public int modID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,46 @@ public class AddAssessment extends AppCompatActivity {
         getEnd = findViewById(R.id.endDate);
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
+
+        //Setting up for Modding an Assessment
+        moddingAssessment = getIntent().getExtras();
+        if (moddingAssessment != null) {
+            int passedPosition = moddingAssessment.getInt("moddingAssessment");
+            Log.println(Log.INFO,"debug", "Data transferred: " + passedPosition);
+
+            allAssessments = new ArrayList<Assessment>();
+
+            assessmentType = findViewById(R.id.assessmentType);
+            performance = findViewById(R.id.performance);
+            objective = findViewById(R.id.objective);
+            assessmentTitle = findViewById(R.id.assessmentTitle);
+            getStart = findViewById(R.id.startDate);
+            getEnd = findViewById(R.id.endDate);
+
+
+            Repository repo = new Repository(getApplication());
+            allAssessments.addAll(repo.getAllAssessments());
+            allAssessments.get(passedPosition);
+            Assessment modAssessment = new Assessment(
+                    allAssessments.get(passedPosition).getAssessmentID(),
+                    allAssessments.get(passedPosition).getAssessmentType(),
+                    allAssessments.get(passedPosition).getAssessmentTitle(),
+                    allAssessments.get(passedPosition).getStartDate(),
+                    allAssessments.get(passedPosition).getEndDate());
+                    modID = modAssessment.getAssessmentID();
+
+        if (modAssessment.getAssessmentType().equals("Performance")) {
+            performance.setChecked(true);
+        } else {
+            objective.setChecked(true);
+        }
+        assessmentTitle.setText(modAssessment.getAssessmentTitle());
+        getStart.setText(modAssessment.getStartDate());
+        getEnd.setText(modAssessment.getEndDate());
+
+        }
+
+
     }
 
     // This is setting up the Start Date Picker.
@@ -198,7 +244,13 @@ public class AddAssessment extends AppCompatActivity {
         if (getEnd.getText().toString().isEmpty()) {
             Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
 
-        } else {
+        } else if (moddingAssessment != null) {
+            Log.println(Log.INFO,"debug", "Mod assessment logic here");
+            Repository repo = new Repository(getApplication());
+            Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+            repo.updateAssessment(modAssessment);
+            Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+        }else {
 
             //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
             Repository repo = new Repository(getApplication());
@@ -207,14 +259,5 @@ public class AddAssessment extends AppCompatActivity {
             Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
         }
 
-
-
-
-
-        /* This is how we call to save new Assessment when ready.
-        *   Repository repo = new Repository(getApplication());
-        Term test = new Term(1,"Test Class", "testDate", "endTestDate");
-        repo.insertTerm(test);
-        * */
     }
 }

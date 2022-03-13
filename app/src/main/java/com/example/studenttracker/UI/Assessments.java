@@ -32,7 +32,7 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
     private TextView expanded;
     public Assessment selectedAssessment;
     public Integer previouslySelected = 0;
-    public CustomAdapter customerAdapter;
+    public CustomAdapter customAdapter;
 
 
     private Button btn; // Will use for testing
@@ -50,7 +50,7 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
         Repository repo = new Repository(getApplication());
         allAssessments.addAll(repo.getAllAssessments());
 
-        CustomAdapter customAdapter = new CustomAdapter(allAssessments, this);
+        customAdapter = new CustomAdapter(allAssessments, this);
         RecyclerView.LayoutManager layoutManger = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManger);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -71,14 +71,18 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
 
     public void editAssessment(View view) {
         Intent intent = new Intent(Assessments.this,AddAssessment.class);
+        intent.putExtra("moddingAssessment", previouslySelected);
         startActivity(intent);
     }
 
 
     public void deleteAssessment(View view) {
         Repository repo = new Repository(getApplication());
-       // customerAdapter.notifyItemRemoved();
         repo.deleteAssessment(selectedAssessment);
+        allAssessments.clear();
+        allAssessments.addAll(repo.getAllAssessments());
+        customAdapter.notifyItemRemoved(previouslySelected);
+
 
 
 
@@ -94,14 +98,14 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
     public void onAssessmentClick(int position) {
 
         Log.println(Log.INFO,"debug", "You have picked: " + allAssessments.get(position).getAssessmentTitle());
+        previouslySelected = position;
 
-/*
             selectedAssessment = new Assessment(
                     Integer.parseInt(String.valueOf(allAssessments.get(position).getAssessmentID())),
                     allAssessments.get(position).getAssessmentType(),
                     allAssessments.get(position).getAssessmentTitle(),
                     allAssessments.get(position).getStartDate(),
-                    allAssessments.get(position).getEndDate()); */
+                    allAssessments.get(position).getEndDate());
 
 
 
