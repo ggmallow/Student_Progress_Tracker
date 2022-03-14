@@ -29,13 +29,11 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
     public ArrayList<Assessment> allAssessments = new ArrayList<>();
 
     private RecyclerView recyclerView;
-    private TextView expanded;
     public Assessment selectedAssessment;
-    public Integer previouslySelected = 0;
+    public Integer previouslySelected = -1;
     public CustomAdapter customAdapter;
 
 
-    private Button btn; // Will use for testing
 
 
     @Override
@@ -57,11 +55,6 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
         recyclerView.setAdapter(customAdapter);
 
 
-
-
-
-
-
     }
 
     public void addAssessment(View view) {
@@ -70,6 +63,12 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
     }
 
     public void editAssessment(View view) {
+
+        if (previouslySelected == -1) {
+            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Intent intent = new Intent(Assessments.this,AddAssessment.class);
         intent.putExtra("moddingAssessment", previouslySelected);
         startActivity(intent);
@@ -77,6 +76,12 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
 
 
     public void deleteAssessment(View view) {
+        //Handles button click, when no assessment is selected.
+        if (previouslySelected == -1) {
+            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Repository repo = new Repository(getApplication());
         repo.deleteAssessment(selectedAssessment);
         allAssessments.clear();
@@ -90,7 +95,13 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
 //Remove save button, use same form as AddAssessment
     public void assessmentDetails(View view) {
         Intent intent = new Intent(Assessments.this,AddAssessment.class);
-        int detailView = 1;
+        int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
+
+        //Handles button click, when no assessment is selected.
+        if (previouslySelected == -1) {
+            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         intent.putExtra("assessmentDetails", previouslySelected);
         intent.putExtra("detailView", detailView);
@@ -104,6 +115,7 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
         Log.println(Log.INFO,"debug", "You have picked: " + allAssessments.get(position).getAssessmentTitle());
         previouslySelected = position;
 
+        //Creates an assessment based off selection. Used for delete method.
             selectedAssessment = new Assessment(
                     Integer.parseInt(String.valueOf(allAssessments.get(position).getAssessmentID())),
                     allAssessments.get(position).getAssessmentType(),
@@ -111,7 +123,7 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
                     allAssessments.get(position).getStartDate(),
                     allAssessments.get(position).getEndDate());
 
-
-
     }
+
+
 }

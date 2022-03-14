@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,7 +71,10 @@ public class AddAssessment extends AppCompatActivity {
 
 
         modAssessmentInit(); //Setting up for Modding an Assessment.
+
         assessmentDetailsInit(); //Setting up for Assessment Detail View.
+
+
 
 
 
@@ -77,57 +82,60 @@ public class AddAssessment extends AppCompatActivity {
     //Method that provides all data to the form, if navigating from details button. It also disables the fields and hides the save button.
     private void assessmentDetailsInit() {
 
-        assessmentDetails = getIntent().getExtras();
-        if (assessmentDetails.getInt("detailView") == 1) {
-            int passedPosition = assessmentDetails.getInt("assessmentDetails");
+        try {
+            assessmentDetails = getIntent().getExtras();
+            if (assessmentDetails.getInt("detailView") == 1) {
+                int passedPosition = assessmentDetails.getInt("assessmentDetails");
 
-            allAssessments = new ArrayList<Assessment>();
+                allAssessments = new ArrayList<Assessment>();
 
-            assessmentType = findViewById(R.id.assessmentType);
-            performance = findViewById(R.id.performance);
-            objective = findViewById(R.id.objective);
-            assessmentTitle = findViewById(R.id.assessmentTitle);
-            getStart = findViewById(R.id.startDate);
-            getEnd = findViewById(R.id.endDate);
-            saveAssessment = findViewById(R.id.saveAssessment);
-
-
-
-            //Disabling fields, so they can not be edited.
-            assessmentType.setEnabled(false);
-            performance.setEnabled(false);
-            objective.setEnabled(false);
-            assessmentTitle.setEnabled(false);
-            getStart.setEnabled(false);
-            getEnd.setEnabled(false);
-            saveAssessment.setVisibility(View.GONE);
-            detailsInfo.setVisibility(View.VISIBLE);
+                assessmentType = findViewById(R.id.assessmentType);
+                performance = findViewById(R.id.performance);
+                objective = findViewById(R.id.objective);
+                assessmentTitle = findViewById(R.id.assessmentTitle);
+                getStart = findViewById(R.id.startDate);
+                getEnd = findViewById(R.id.endDate);
+                saveAssessment = findViewById(R.id.saveAssessment);
 
 
 
+                //Disabling fields, so they can not be edited.
+                assessmentType.setEnabled(false);
+                performance.setEnabled(false);
+                objective.setEnabled(false);
+                assessmentTitle.setEnabled(false);
+                getStart.setEnabled(false);
+                getEnd.setEnabled(false);
+                saveAssessment.setVisibility(View.GONE);
+                detailsInfo.setVisibility(View.VISIBLE);
 
-            Repository repo = new Repository(getApplication());
-            allAssessments.addAll(repo.getAllAssessments());
-            allAssessments.get(passedPosition);
-            Assessment assessmentDetails = new Assessment(
-                    allAssessments.get(passedPosition).getAssessmentID(),
-                    allAssessments.get(passedPosition).getAssessmentType(),
-                    allAssessments.get(passedPosition).getAssessmentTitle(),
-                    allAssessments.get(passedPosition).getStartDate(),
-                    allAssessments.get(passedPosition).getEndDate());
 
-            //Populating form data
-            if (assessmentDetails.getAssessmentType().equals("Performance")) {
-                performance.setChecked(true);
-            } else {
-                objective.setChecked(true);
+
+
+                Repository repo = new Repository(getApplication());
+                allAssessments.addAll(repo.getAllAssessments());
+                allAssessments.get(passedPosition);
+                Assessment assessmentDetails = new Assessment(
+                        allAssessments.get(passedPosition).getAssessmentID(),
+                        allAssessments.get(passedPosition).getAssessmentType(),
+                        allAssessments.get(passedPosition).getAssessmentTitle(),
+                        allAssessments.get(passedPosition).getStartDate(),
+                        allAssessments.get(passedPosition).getEndDate());
+
+                //Populating form data
+                if (assessmentDetails.getAssessmentType().equals("Performance")) {
+                    performance.setChecked(true);
+                } else {
+                    objective.setChecked(true);
+                }
+                assessmentTitle.setText(assessmentDetails.getAssessmentTitle());
+                getStart.setText(assessmentDetails.getStartDate());
+                getEnd.setText(assessmentDetails.getEndDate());
             }
-            assessmentTitle.setText(assessmentDetails.getAssessmentTitle());
-            getStart.setText(assessmentDetails.getStartDate());
-            getEnd.setText(assessmentDetails.getEndDate());
+        } catch (Exception e) {
+          //  e.printStackTrace(); Used during debugging, handling problem below.
+            Log.println(Log.INFO,"debug", "Null pointer has occurred.");
         }
-
-
 
 
     }
@@ -191,8 +199,11 @@ public class AddAssessment extends AppCompatActivity {
 
                 String makeDateString = makeDateString(day, month, year);
                 getStart.setText(makeDateString);
+
+
             }
         };
+
         Calendar myCal = Calendar.getInstance();
         int year = myCal.get(Calendar.YEAR);
         int month = myCal.get(Calendar.MONTH);
@@ -234,7 +245,7 @@ public class AddAssessment extends AppCompatActivity {
         return getMonthFormat(month) + " " + day + " " + year;
     }
 
-
+    //Formats month as String name.
     private String getMonthFormat(int month) {
         if (month == 1) {
             return "JAN";
@@ -308,18 +319,27 @@ public class AddAssessment extends AppCompatActivity {
             Toast.makeText(this, "You must pick a Start Date", Toast.LENGTH_LONG).show();
             return;
         }
-        /*
-//This is not complete
-        if (getStart.getText().toString().length() > 0 && getEnd.getText().toString().length() > 0) {
-            Toast.makeText(this, "This will contain logic for date checking.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        */
 
         if (getEnd.getText().toString().isEmpty()) {
             Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // Setting a date formatter to convert strings to actual Dates.
+        SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
+        Date startDate = test.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
+        Date endDate = test.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
 
-        } else if (moddingAssessment != null) {
+        //Making sure Start Date is before the End Date
+        if (endDate.before(startDate)) {
+            Toast.makeText(this, "Assessment End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        //Not allowing for Start Date to be equal to End Date.
+        if (startDate.equals(endDate)) {
+            Toast.makeText(this, "Assessment Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+        }
+
+        else if (moddingAssessment != null) {
             Log.println(Log.INFO,"debug", "Mod assessment logic here");
             Repository repo = new Repository(getApplication());
             Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
@@ -332,6 +352,20 @@ public class AddAssessment extends AppCompatActivity {
             Assessment newAssessment = new Assessment(0,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
             repo.insertAssessment(newAssessment);
             Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+   //Used for testing date conversions.  This is a working model.
+    public void test(View view) throws ParseException {
+
+        SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
+        Date testStartDate = test.parse(getStart.getText().toString());
+        Date testEndDate = test.parse(getEnd.getText().toString());
+        if (testStartDate.before(testEndDate)) {
+            Log.println(Log.INFO,"debug", "Victory");
+        } else {
+            Log.println(Log.INFO,"debug", "Fail");
         }
 
     }
