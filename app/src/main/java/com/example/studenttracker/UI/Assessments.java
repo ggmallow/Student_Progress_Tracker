@@ -90,6 +90,10 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
 //Remove save button, use same form as AddAssessment
     public void assessmentDetails(View view) {
         Intent intent = new Intent(Assessments.this,AddAssessment.class);
+        int detailView = 1;
+
+        intent.putExtra("assessmentDetails", previouslySelected);
+        intent.putExtra("detailView", detailView);
         startActivity(intent);
 
     }

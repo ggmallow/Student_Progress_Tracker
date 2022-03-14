@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -45,8 +47,12 @@ public class AddAssessment extends AppCompatActivity {
     public EditText assessmentTitle; // Setting assessmentTitle
     private TextView getStart; //Setting Start Date
     private TextView getEnd; //Setting End Date
+    public Button saveAssessment;
+    public TextView detailsInfo;
 
     public Bundle moddingAssessment;
+    public Bundle assessmentDetails;
+
     public int modID;
 
     @Override
@@ -56,21 +62,84 @@ public class AddAssessment extends AppCompatActivity {
 
         getStart = findViewById(R.id.startDate);
         getEnd = findViewById(R.id.endDate);
+        detailsInfo = findViewById(R.id.detailsInfo);
+        detailsInfo.setVisibility(View.GONE);
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
 
-        //Setting up for Modding an Assessment
-        modAssessmentInit();
+
+        modAssessmentInit(); //Setting up for Modding an Assessment.
+        assessmentDetailsInit(); //Setting up for Assessment Detail View.
 
 
 
     }
-//Method that provides all data to the form, if navigating from edit button.
+    //Method that provides all data to the form, if navigating from details button. It also disables the fields and hides the save button.
+    private void assessmentDetailsInit() {
+
+        assessmentDetails = getIntent().getExtras();
+        if (assessmentDetails.getInt("detailView") == 1) {
+            int passedPosition = assessmentDetails.getInt("assessmentDetails");
+
+            allAssessments = new ArrayList<Assessment>();
+
+            assessmentType = findViewById(R.id.assessmentType);
+            performance = findViewById(R.id.performance);
+            objective = findViewById(R.id.objective);
+            assessmentTitle = findViewById(R.id.assessmentTitle);
+            getStart = findViewById(R.id.startDate);
+            getEnd = findViewById(R.id.endDate);
+            saveAssessment = findViewById(R.id.saveAssessment);
+
+
+
+            //Disabling fields, so they can not be edited.
+            assessmentType.setEnabled(false);
+            performance.setEnabled(false);
+            objective.setEnabled(false);
+            assessmentTitle.setEnabled(false);
+            getStart.setEnabled(false);
+            getEnd.setEnabled(false);
+            saveAssessment.setVisibility(View.GONE);
+            detailsInfo.setVisibility(View.VISIBLE);
+
+
+
+
+            Repository repo = new Repository(getApplication());
+            allAssessments.addAll(repo.getAllAssessments());
+            allAssessments.get(passedPosition);
+            Assessment assessmentDetails = new Assessment(
+                    allAssessments.get(passedPosition).getAssessmentID(),
+                    allAssessments.get(passedPosition).getAssessmentType(),
+                    allAssessments.get(passedPosition).getAssessmentTitle(),
+                    allAssessments.get(passedPosition).getStartDate(),
+                    allAssessments.get(passedPosition).getEndDate());
+
+            //Populating form data
+            if (assessmentDetails.getAssessmentType().equals("Performance")) {
+                performance.setChecked(true);
+            } else {
+                objective.setChecked(true);
+            }
+            assessmentTitle.setText(assessmentDetails.getAssessmentTitle());
+            getStart.setText(assessmentDetails.getStartDate());
+            getEnd.setText(assessmentDetails.getEndDate());
+        }
+
+
+
+
+    }
+
+    //Method that provides all data to the form, if navigating from edit button.
     private void modAssessmentInit() {
         moddingAssessment = getIntent().getExtras();
         if (moddingAssessment != null) {
             int passedPosition = moddingAssessment.getInt("moddingAssessment");
             Log.println(Log.INFO,"debug", "Data transferred: " + passedPosition);
+            Log.println(Log.INFO,"debug", "moddingAssessment: " + moddingAssessment);
+
 
             allAssessments = new ArrayList<Assessment>();
 
