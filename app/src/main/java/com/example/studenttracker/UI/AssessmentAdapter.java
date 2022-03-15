@@ -1,7 +1,6 @@
 package com.example.studenttracker.UI;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.example.studenttracker.R;
 
 import java.util.ArrayList;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
+public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.MyViewHolder> {
 
     private ArrayList<Assessment> allAssessmentList;
     private assessmentClickListener mAssessmentClickListener;
@@ -23,7 +22,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
 
 
-    public CustomAdapter(ArrayList<Assessment> allAssessmentList, assessmentClickListener assessmentClickListener) {
+    public AssessmentAdapter(ArrayList<Assessment> allAssessmentList, assessmentClickListener assessmentClickListener) {
         this.allAssessmentList = allAssessmentList;
         this.mAssessmentClickListener = assessmentClickListener;
     }
@@ -63,7 +62,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @NonNull
     @Override
-    public CustomAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AssessmentAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_assessment, parent, false);
 
 
@@ -71,7 +70,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AssessmentAdapter.MyViewHolder holder, int position) {
 
 
         String assessmentName = allAssessmentList.get(position).getAssessmentTitle();

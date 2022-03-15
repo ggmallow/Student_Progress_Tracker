@@ -5,33 +5,26 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
 import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.R;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
-public class Assessments extends AppCompatActivity implements CustomAdapter.assessmentClickListener {
+public class Assessments extends AppCompatActivity implements AssessmentAdapter.assessmentClickListener {
 
     public ArrayList<Assessment> allAssessments = new ArrayList<>();
 
     private RecyclerView recyclerView;
     public Assessment selectedAssessment;
     public Integer previouslySelected = -1;
-    public CustomAdapter customAdapter;
+    public AssessmentAdapter assessmentAdapter;
 
 
 
@@ -48,11 +41,11 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
         Repository repo = new Repository(getApplication());
         allAssessments.addAll(repo.getAllAssessments());
 
-        customAdapter = new CustomAdapter(allAssessments, this);
+        assessmentAdapter = new AssessmentAdapter(allAssessments, this);
         RecyclerView.LayoutManager layoutManger = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManger);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(customAdapter);
+        recyclerView.setAdapter(assessmentAdapter);
 
 
     }
@@ -86,7 +79,7 @@ public class Assessments extends AppCompatActivity implements CustomAdapter.asse
         repo.deleteAssessment(selectedAssessment);
         allAssessments.clear();
         allAssessments.addAll(repo.getAllAssessments());
-        customAdapter.notifyItemRemoved(previouslySelected);
+        assessmentAdapter.notifyItemRemoved(previouslySelected);
 
 
 
