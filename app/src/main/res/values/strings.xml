@@ -2,4 +2,15 @@
     <string name="app_name">Student Tracker</string>
     <string name="Open">Student Tracker</string>
     <string name="Close">Student Tracker</string>
+
+
+    <string-array  name="status_options">
+        <item name="In Progress">Select a Status</item>
+        <item name="In Progress">In Progress</item>
+        <item name="Completed">Completed</item>
+        <item name="Dropped">Dropped</item>
+        <item name="Plan to Take">Plan to Take</item>
+    </string-array>
+
+
 </resources>

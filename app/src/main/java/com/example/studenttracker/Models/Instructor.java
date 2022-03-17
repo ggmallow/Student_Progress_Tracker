@@ -44,4 +44,17 @@ public class Instructor {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+
+       return name;
+       /*
+
+        return "Instructor{" +
+                "name='" + name + '\'' +
+                ", phone=" + phone +
+                ", email='" + email + '\'' +
+                '}'; */
+    }
 }

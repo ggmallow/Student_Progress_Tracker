@@ -324,7 +324,7 @@ public class AddAssessment extends AppCompatActivity {
             Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
             return;
         }
-        // Setting a date formatter to convert strings to actual Dates.
+        // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
         SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
         Date startDate = test.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
         Date endDate = test.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
