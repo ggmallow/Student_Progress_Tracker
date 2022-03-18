@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
 import com.example.studenttracker.Models.Assessment;
@@ -16,9 +18,13 @@ import com.example.studenttracker.R;
 
 import java.util.ArrayList;
 
-public class Courses extends AppCompatActivity {
+public class Courses extends AppCompatActivity implements CourseAdapter.OnCourseListener {
     public ArrayList<Course> allCourses = new ArrayList<>();
     public RecyclerView allCoursesRecycler;
+
+    public Course selectedCourse;
+    public Integer previouslySelected = -1;
+    public CourseAdapter courseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +34,10 @@ public class Courses extends AppCompatActivity {
 
 
         allCourses = new ArrayList<Course>(); //Initiating new ArrayList
-        Repository repo = new Repository(getApplication()); //Creatting new Repository to get Courses.
+        Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
         allCourses.addAll(repo.getAllCourses()); // Actually adding all courses from the allCourses database.
 
-        CourseAdapter courseAdapter = new CourseAdapter(allCourses);
+        courseAdapter = new CourseAdapter(allCourses, this);
         allCoursesRecycler = findViewById(R.id.allCoursesRecycler);
         RecyclerView.LayoutManager courseLayout = new LinearLayoutManager(getApplicationContext());
         allCoursesRecycler.setLayoutManager(courseLayout);
@@ -52,17 +58,37 @@ public class Courses extends AppCompatActivity {
     }
 
     public void deleteCourse(View view) {
+        //Handles button click, when no assessment is selected.
+        if (previouslySelected == -1) {
+            Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Repository repo = new Repository(getApplication());
-        Course test = new Course (1, "t", "MAR 17 2022", "MAR 17 2022", "In Progress");
-        repo.deleteCourse(test);
+        repo.deleteCourse(selectedCourse);
         allCourses.clear();
         allCourses.addAll(repo.getAllCourses());
-      //  courseAdapter.notifyItemRemoved(previouslySelected); This will be enabled after UI is finished.
+        courseAdapter.notifyItemRemoved(previouslySelected);
     }
 
     //Remove save button, use same form as AddCourse
     public void courseDetails(View view) {
         Intent intent = new Intent(Courses.this,AddCourse.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCourseClick(int position) {
+        Log.println(Log.INFO,"debug", "You have picked: " + allCourses.get(position).getTitle());
+        previouslySelected = position;
+
+        //Creates an course based off selection. Used for delete method.
+        selectedCourse = new Course (
+                allCourses.get(position).getCourseID(),
+                allCourses.get(position).getTitle(),
+                allCourses.get(position).getStartDate(),
+                allCourses.get(position).getEndDate(),
+                allCourses.get(position).getStatus());
+
     }
 }
