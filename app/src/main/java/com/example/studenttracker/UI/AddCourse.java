@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -52,10 +53,15 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public TextView instructorPhone; //Setting up Instructor Phone TextView.
     public TextView instructorEmail; //Setting up Instructor Email TextView.
 
+    public Button saveCourse;
+
     //Used for modding course
     public Bundle moddingCourse;
     public ArrayList<Course> allCourses;
     public int modID;
+
+    //Used for detailed View
+    public Bundle courseDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +88,49 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         initInstructorPicker(); //Loads menu with instructors.
 
         modCourseInit();  //Setting up for modding Course.
+        courseDetailsInit(); //Setting up if navigating form Course Details button.
 
 
 
+
+    }
+
+    private void courseDetailsInit() {
+        try {
+            courseDetails = getIntent().getExtras();
+            if (courseDetails.getInt("detailView") == 1) {
+
+            allCourses = new ArrayList<Course>();
+
+            courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
+            getStart = findViewById(R.id.startDate); //Setting Start Date.
+            getEnd = findViewById(R.id.endDate); //Setting End Date.
+
+            statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
+
+            instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
+
+            instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
+            instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
+            saveCourse = findViewById(R.id.saveCourse);
+
+            //Disabling to prevent editing.
+            courseTitle.setEnabled(false);
+            getStart.setEnabled(false);
+            getEnd.setEnabled(false);
+            statusSpinner.setEnabled(false);
+            instructorSpinner.setEnabled(false);
+            instructorPhone.setEnabled(false);
+            instructorEmail.setEnabled(false);
+            saveCourse.setVisibility(View.GONE);
+
+
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -326,9 +372,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             repo.insertCourse(newCourse);
             Toast.makeText(this, "Course Saved, Check Database.", Toast.LENGTH_LONG).show();
         }
-
-
-
 
 
     }

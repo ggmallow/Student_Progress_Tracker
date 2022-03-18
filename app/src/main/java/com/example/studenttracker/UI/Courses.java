@@ -81,6 +81,16 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     //Remove save button, use same form as AddCourse
     public void courseDetails(View view) {
         Intent intent = new Intent(Courses.this,AddCourse.class);
+        int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
+
+        //Handles button click, when no assessment is selected.
+        if (previouslySelected == -1) {
+            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        intent.putExtra("courseDetails", previouslySelected);
+        intent.putExtra("detailView", detailView);
         startActivity(intent);
     }
 
