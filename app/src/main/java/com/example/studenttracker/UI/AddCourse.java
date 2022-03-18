@@ -52,7 +52,10 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public TextView instructorPhone; //Setting up Instructor Phone TextView.
     public TextView instructorEmail; //Setting up Instructor Email TextView.
 
-
+    //Used for modding course
+    public Bundle moddingCourse;
+    public ArrayList<Course> allCourses;
+    public int modID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +81,51 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         instructorList.add(testInstructor2);
         initInstructorPicker(); //Loads menu with instructors.
 
+        modCourseInit();  //Setting up for modding Course.
 
+
+
+
+    }
+
+    //Method to set up fields if coming from the Course edit button.
+    private void modCourseInit() {
+
+        moddingCourse = getIntent().getExtras();
+        if (moddingCourse != null) {
+            courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
+            getStart = findViewById(R.id.startDate); //Setting Start Date.
+            getEnd = findViewById(R.id.endDate); //Setting End Date.
+
+            statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
+
+            instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
+
+            instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
+            instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
+
+            allCourses = new ArrayList<Course>();
+
+            int passedPosition = moddingCourse.getInt("moddingCourse");
+
+            Repository repo = new Repository(getApplication());
+            allCourses.addAll(repo.getAllCourses());
+            Course modifiedCourse = new Course(
+                    allCourses.get(passedPosition).getCourseID(),
+                    allCourses.get(passedPosition).getTitle(),
+                    allCourses.get(passedPosition).getStartDate(),
+                    allCourses.get(passedPosition).getEndDate(),
+                    allCourses.get(passedPosition).getStatus());
+
+            courseTitle.setText(modifiedCourse.getTitle());
+            getStart.setText(modifiedCourse.getStartDate());
+            getEnd.setText(modifiedCourse.getEndDate());
+            modID = modifiedCourse.getCourseID();
+
+
+            statusSpinner.setSelection(statusAdapter.getPosition(allCourses.get(passedPosition).getStatus()));
+
+        }
     }
 
     private void initInstructorPicker() {
@@ -230,7 +277,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-//Work needed but parts now enter the database.
+//Work needed but parts now enter the database. Need to check Dates for errors still.
     public void saveCourse(View view) {
         courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
         getStart = findViewById(R.id.startDate); //Setting Start Date.
@@ -259,7 +306,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 Toast.makeText(this, "You must select a valid status", Toast.LENGTH_LONG).show();
 
 
-        } else {
+        } else if (moddingCourse != null) {
+            Repository repo = new Repository(getApplication());
+            Course modCourse = new Course(modID,
+                    courseTitle.getText().toString(),
+                    getStart.getText().toString(),
+                    getEnd.getText().toString(),
+                    statusSpinner.getSelectedItem().toString());
+            repo.updateCourse(modCourse);
+            Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+        }else {
 
             Repository repo = new Repository(getApplication());
             Course newCourse = new Course(0,

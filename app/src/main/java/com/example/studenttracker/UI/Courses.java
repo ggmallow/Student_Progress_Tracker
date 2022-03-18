@@ -26,6 +26,8 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     public Integer previouslySelected = -1;
     public CourseAdapter courseAdapter;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,12 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
 
     public void editCourse(View view) {
+        if (previouslySelected == -1) {
+            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            return;
+        }
         Intent intent = new Intent(Courses.this,AddCourse.class);
+        intent.putExtra("moddingCourse", previouslySelected);
         startActivity(intent);
     }
 
