@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,42 +27,22 @@
         app:layout_constraintStart_toStartOf="parent">
 
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allCoursesRecycler"
+            android:layout_width="375dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
 
-                android:background="@color/cardview_dark_background">
+        </androidx.recyclerview.widget.RecyclerView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hello"
-                    android:textColor="#FFFFFF" />
-            </TableRow>
+    </RelativeLayout>
 
-        </TableLayout>
-    </ScrollView>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="123dp"
-        android:layout_marginTop="356dp"
-        android:layout_marginEnd="123dp"
-        android:text="Welcome to the Course View"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addCourse"

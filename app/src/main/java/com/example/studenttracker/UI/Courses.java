@@ -1,6 +1,9 @@
 package com.example.studenttracker.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,15 +18,27 @@ import java.util.ArrayList;
 
 public class Courses extends AppCompatActivity {
     public ArrayList<Course> allCourses = new ArrayList<>();
+    public RecyclerView allCoursesRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_courses);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        allCourses = new ArrayList<Course>(); //Initiating new ArrayList
+        Repository repo = new Repository(getApplication()); //Creatting new Repository to get Courses.
+        allCourses.addAll(repo.getAllCourses()); // Actually adding all courses from the allCourses database.
+
+        CourseAdapter courseAdapter = new CourseAdapter(allCourses);
+        allCoursesRecycler = findViewById(R.id.allCoursesRecycler);
+        RecyclerView.LayoutManager courseLayout = new LinearLayoutManager(getApplicationContext());
+        allCoursesRecycler.setLayoutManager(courseLayout);
+        allCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
+        allCoursesRecycler.setAdapter(courseAdapter);
+
     }
-
-
 
     public void addCourse(View view) {
         Intent intent = new Intent(Courses.this,AddCourse.class);
