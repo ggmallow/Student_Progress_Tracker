@@ -52,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
         final NavigationView nav_View = findViewById(R.id.nav);
 
-
+/*
         //This is just test data and can be removed later.
         Repository repo = new Repository(getApplication());
-        Term test = new Term(1,"Test Class", "testDate", "endTestDate");
-        repo.insertTerm(test);
+        Term test = new Term(3,"Test Class", "testDate", "endTestDate");
+        repo.insertTerm(test); */
 
 
         nav_View.setNavigationItemSelectedListener(item -> {

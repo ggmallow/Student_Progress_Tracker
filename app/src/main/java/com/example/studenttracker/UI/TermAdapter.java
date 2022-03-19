@@ -16,8 +16,10 @@ import com.example.studenttracker.R;
 import java.util.ArrayList;
 
 public class TermAdapter extends RecyclerView.Adapter<TermAdapter.MyViewHolder>{
+
     private ArrayList<Term> allTermsList;
     private OnTermListener mOnTermListener;
+
     public int checkedPosition = -1;
 
 
@@ -30,7 +32,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.MyViewHolder>{
         private TextView termView;
         OnTermListener  onTermListener;
 
-        public MyViewHolder(@NonNull View itemView, OnTermListener onTermListener) {
+        public MyViewHolder(final View itemView, OnTermListener onTermListener) {
             super(itemView);
             termView = itemView.findViewById(R.id.termView);
             this.onTermListener = onTermListener;
@@ -55,13 +57,13 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.MyViewHolder>{
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TermAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View termView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_term, parent, false);
         return new MyViewHolder(termView, mOnTermListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TermAdapter.MyViewHolder holder, int position) {
         String termName = allTermsList.get(position).getTitle();
         holder.termView.setText(termName);
 

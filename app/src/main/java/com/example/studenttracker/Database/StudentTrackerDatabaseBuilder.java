@@ -13,7 +13,7 @@ import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.Models.Course;
 import com.example.studenttracker.Models.Term;
 
-@Database(entities = {Term.class,  Course.class, Assessment.class}, version = 2, exportSchema = false)
+@Database(entities = {Term.class,  Course.class, Assessment.class}, version = 4, exportSchema = false)
 
 public abstract class StudentTrackerDatabaseBuilder extends RoomDatabase {
 
