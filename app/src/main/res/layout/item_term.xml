@@ -16,7 +16,8 @@
         android:text="Assessment Name"
         android:textAlignment="center"
         android:textSize="18dp"
-        android:background="@drawable/rounded_corners"
+        android:background="@drawable/border"
+
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

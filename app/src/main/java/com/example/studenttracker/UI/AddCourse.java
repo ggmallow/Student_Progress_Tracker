@@ -42,6 +42,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     private TextView courseTitle; //Setting Course Title.
     private TextView getStart; //Setting Start Date.
     private TextView getEnd; //Setting End Date.
+    public TextView detailsInfo;
 
     public Spinner statusSpinner; //Setting up Spinner for Status.
     public ArrayAdapter statusAdapter;
@@ -70,6 +71,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
         getStart = findViewById(R.id.startDate);
         getEnd = findViewById(R.id.endDate);
+        detailsInfo = findViewById(R.id.detailsInfo);
+        detailsInfo.setVisibility(View.GONE);
 
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
@@ -123,6 +126,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             instructorPhone.setEnabled(false);
             instructorEmail.setEnabled(false);
             saveCourse.setVisibility(View.GONE);
+            detailsInfo.setVisibility(View.VISIBLE);
 
 
 

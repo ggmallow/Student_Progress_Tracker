@@ -39,6 +39,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public Button attachCourse;
     public Button detachCourse;
     public Button saveTerm;
+    public TextView detailsInfo;
 
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
@@ -68,10 +69,11 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         attachCourse = findViewById(R.id.attachCourse);
         detachCourse = findViewById(R.id.detachCourse);
         saveTerm = findViewById(R.id.saveTerm);
+        detailsInfo = findViewById(R.id.detailsInfo);
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
 
-
+        detailsInfo.setVisibility(View.GONE);
         allCourses = new ArrayList<Course>(); //Initiating new ArrayList
         Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
         allCourses.addAll(repo.getAllCourses()); // Actually adding all courses from the allCourses database.
@@ -100,6 +102,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                 attachCourse.setEnabled(false);
                 detachCourse.setEnabled(false);
                 saveTerm.setVisibility(View.GONE);
+                detailsInfo.setVisibility(View.VISIBLE);
 
 
 

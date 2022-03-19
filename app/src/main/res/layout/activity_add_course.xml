@@ -133,10 +133,11 @@
                     android:layout_width="250dp"
                     android:layout_height="250dp"
                     android:layout_marginStart="13dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="50dp"
                     android:layout_marginEnd="13dp"
                     android:ems="10"
                     android:hint="Course Notes (optional)"
+                    android:background="@drawable/border"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/instructorEmail" />
@@ -154,6 +155,21 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/courseNotes" />
+
+                <TextView
+                    android:id="@+id/detailsInfo"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="20dp"
+                    android:textStyle="bold"
+                    android:text="You can not change details from the Course Details menu. If you need to edit a course, visit the edit menu."
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/courseNotes" />
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
