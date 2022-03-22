@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -216,6 +217,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
 
             statusSpinner.setSelection(statusAdapter.getPosition(allCourses.get(passedPosition).getStatus()));
+            courseNotes.setText(allCourses.get(passedPosition).getCourseNotes());
 
         }
     }
@@ -432,5 +434,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     public void onAssessmentClick(int position) {
 
+    }
+
+    public void shareNotes(View view) {
+      String sharedNote = courseNotes.getText().toString();
+      Intent sharedIntent = new Intent();
+      sharedIntent.setAction(Intent.ACTION_SEND);
+      sharedIntent.putExtra(Intent.EXTRA_TEXT, sharedNote);
+      sharedIntent.putExtra(Intent.EXTRA_TITLE, "Course Notes");
+      sharedIntent.setType("text/plain");
+      Intent sharedIntentChooser = Intent.createChooser(sharedIntent,null);
+      startActivity(sharedIntentChooser);
     }
 }

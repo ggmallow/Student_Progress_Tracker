@@ -202,6 +202,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="145dp"
                     android:text=""
+                    android:onClick="shareNotes"
                     app:icon="@drawable/share"
                     app:layout_constraintBottom_toTopOf="@+id/saveCourse"
                     app:layout_constraintEnd_toEndOf="parent"
