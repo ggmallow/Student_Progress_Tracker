@@ -9,22 +9,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentTracker">
+        <receiver
+            android:name=".UI.MyReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
         <activity
             android:name=".UI.AddAssessment"
             android:exported="false"
             android:label="Assessment"
             android:parentActivityName=".UI.Assessments" />
-
         <activity
             android:name=".UI.AddCourse"
             android:exported="false"
             android:label="Courses"
-            android:parentActivityName=".UI.Courses"/>
+            android:parentActivityName=".UI.Courses" />
         <activity
             android:name=".UI.AddTerm"
             android:exported="false"
             android:label="Terms"
-            android:parentActivityName=".UI.Terms"/>
+            android:parentActivityName=".UI.Terms" />
         <activity
             android:name=".UI.Courses"
             android:exported="false"

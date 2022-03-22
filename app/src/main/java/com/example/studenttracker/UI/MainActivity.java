@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public DrawerLayout navDrawer;
     public ActionBarDrawerToggle drawerToggle;
+    public static int alertNum;
 
 
 

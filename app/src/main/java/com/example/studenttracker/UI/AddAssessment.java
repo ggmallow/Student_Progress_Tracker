@@ -2,9 +2,13 @@ package com.example.studenttracker.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -325,9 +329,9 @@ public class AddAssessment extends AppCompatActivity {
             return;
         }
         // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
-        SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
-        Date startDate = test.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
-        Date endDate = test.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
+        SimpleDateFormat date = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
+        Date startDate = date.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
+        Date endDate = date.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
 
         //Making sure Start Date is before the End Date
         if (endDate.before(startDate)) {
@@ -344,6 +348,27 @@ public class AddAssessment extends AppCompatActivity {
             Repository repo = new Repository(getApplication());
             Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
             repo.updateAssessment(modAssessment);
+
+            Long alertStartTime = startDate.getTime();
+            Long alertEndTime = endDate.getTime();
+
+            Intent notificationStartIntent = new Intent(AddAssessment.this, MyReceiver.class);
+            Intent notificationEndIntent = new Intent(AddAssessment.this, MyReceiver.class);
+
+            notificationStartIntent.putExtra("key", "Assessment starts today: " + assessmentTitle.getText());
+            notificationEndIntent.putExtra("key", assessmentTitle.getText() + " Assessment Ends today.");
+
+            //Pending intents
+            PendingIntent startTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationStartIntent, 0);
+            PendingIntent endTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationEndIntent, 0);
+
+            AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+            alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+
+
             Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
         }else {
 
@@ -351,7 +376,28 @@ public class AddAssessment extends AppCompatActivity {
             Repository repo = new Repository(getApplication());
             Assessment newAssessment = new Assessment(0,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
             repo.insertAssessment(newAssessment);
+
+            Long alertStartTime = startDate.getTime();
+            Long alertEndTime = endDate.getTime();
+
+            Intent notificationStartIntent = new Intent(AddAssessment.this, MyReceiver.class);
+            Intent notificationEndIntent = new Intent(AddAssessment.this, MyReceiver.class);
+
+            notificationStartIntent.putExtra("key", "Assessment starts today: " + assessmentTitle.getText());
+            notificationEndIntent.putExtra("key", assessmentTitle.getText() + " Assessment Ends today.");
+
+            //Pending intents
+            PendingIntent startTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationStartIntent, 0);
+            PendingIntent endTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationEndIntent, 0);
+
+            AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+            alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+
             Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
+
         }
 
     }
