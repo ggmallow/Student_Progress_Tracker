@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,9 +36,13 @@ import com.example.studenttracker.R;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener , AssessmentAdapter.assessmentClickListener{
 
@@ -372,7 +379,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
 //Work needed but parts now enter the database. Need to check Dates for errors still.
-    public void saveCourse(View view) {
+    public void saveCourse(View view) throws ParseException {
         courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
         getStart = findViewById(R.id.startDate); //Setting Start Date.
         getEnd = findViewById(R.id.endDate); //Setting End Date.
@@ -384,47 +391,110 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
         instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
 
-        if (courseTitle.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (getStart.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't entered a Start Date", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (getEnd.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't entered a End Date", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (statusSpinner.getSelectedItem().equals("Select a Status")) {
-                Toast.makeText(this, "You must select a valid status", Toast.LENGTH_LONG).show();
+        try {
+            if (courseTitle.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (getStart.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't entered a Start Date", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (getEnd.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't entered a End Date", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (statusSpinner.getSelectedItem().equals("Select a Status")) {
+                    Toast.makeText(this, "You must select a valid status", Toast.LENGTH_LONG).show();
+
+            }
+
+            // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
+            SimpleDateFormat date = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
+            Date startDate = date.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
+            Date endDate = date.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
+
+            //Making sure Start Date is before the End Date
+            if (endDate.before(startDate)) {
+                Toast.makeText(this, "Course End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            //Not allowing for Start Date to be equal to End Date.
+            if (startDate.equals(endDate)) {
+                Toast.makeText(this, "Course Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+            }
+
+            else if (moddingCourse != null) {
+
+                Repository repo = new Repository(getApplication());
+                Course modCourse = new Course(modID,
+                        courseTitle.getText().toString(),
+                        getStart.getText().toString(),
+                        getEnd.getText().toString(),
+                        statusSpinner.getSelectedItem().toString(),
+                        instructorSpinner.getSelectedItem().toString(),
+                        courseNotes.getText().toString()
+                        );
+                repo.updateCourse(modCourse);
 
 
-        } else if (moddingCourse != null) {
+                Long alertStartTime = startDate.getTime();
+                Long alertEndTime = endDate.getTime();
 
-            Repository repo = new Repository(getApplication());
-            Course modCourse = new Course(modID,
-                    courseTitle.getText().toString(),
-                    getStart.getText().toString(),
-                    getEnd.getText().toString(),
-                    statusSpinner.getSelectedItem().toString(),
-                    instructorSpinner.getSelectedItem().toString(),
-                    courseNotes.getText().toString()
-                    );
-            repo.updateCourse(modCourse);
-            Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
-        }else {
+                Intent notificationStartIntent = new Intent(AddCourse.this, MyReceiver.class);
+                Intent notificationEndIntent = new Intent(AddCourse.this, MyReceiver.class);
 
-            Repository repo = new Repository(getApplication());
-            Course newCourse = new Course(0,
-                    courseTitle.getText().toString(),
-                    getStart.getText().toString(),
-                    getEnd.getText().toString(),
-                    statusSpinner.getSelectedItem().toString(),
-                    instructorSpinner.getSelectedItem().toString(),
-                    courseNotes.getText().toString());
-            repo.insertCourse(newCourse);
-            Toast.makeText(this, "Course Saved, Check Database.", Toast.LENGTH_LONG).show();
+                notificationStartIntent.putExtra("key", "Course starts today: " + courseTitle.getText());
+                notificationEndIntent.putExtra("key", courseTitle.getText() + " Course Ends today.");
+
+                //Pending intents
+                PendingIntent startTime = PendingIntent.getBroadcast(AddCourse.this, MainActivity.alertNum++, notificationStartIntent, 0);
+                PendingIntent endTime = PendingIntent.getBroadcast(AddCourse.this, MainActivity.alertNum++, notificationEndIntent, 0);
+
+                AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+                alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+
+
+                Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+            }else {
+
+                Repository repo = new Repository(getApplication());
+                Course newCourse = new Course(0,
+                        courseTitle.getText().toString(),
+                        getStart.getText().toString(),
+                        getEnd.getText().toString(),
+                        statusSpinner.getSelectedItem().toString(),
+                        instructorSpinner.getSelectedItem().toString(),
+                        courseNotes.getText().toString());
+                repo.insertCourse(newCourse);
+
+                Long alertStartTime = startDate.getTime();
+                Long alertEndTime = endDate.getTime();
+
+                Intent notificationStartIntent = new Intent(AddCourse.this, MyReceiver.class);
+                Intent notificationEndIntent = new Intent(AddCourse.this, MyReceiver.class);
+
+                notificationStartIntent.putExtra("key", "Course starts today: " + courseTitle.getText());
+                notificationEndIntent.putExtra("key", courseTitle.getText() + " Course Ends today.");
+
+                //Pending intents
+                PendingIntent startTime = PendingIntent.getBroadcast(AddCourse.this, MainActivity.alertNum++, notificationStartIntent, 0);
+                PendingIntent endTime = PendingIntent.getBroadcast(AddCourse.this, MainActivity.alertNum++, notificationEndIntent, 0);
+
+                AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+                alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+
+
+                Toast.makeText(this, "Course Saved, Check Database.", Toast.LENGTH_LONG).show();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
 

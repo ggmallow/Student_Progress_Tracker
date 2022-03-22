@@ -299,105 +299,107 @@ public class AddAssessment extends AppCompatActivity {
         getStart = findViewById(R.id.startDate);
         getEnd = findViewById(R.id.endDate);
 
+        try {
+            if (assessmentType.getCheckedRadioButtonId() == -1) {
+                Toast.makeText(this, "You must select the Assessment Type", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-        if (assessmentType.getCheckedRadioButtonId() == -1) {
-            Toast.makeText(this, "You must select the Assessment Type", Toast.LENGTH_LONG).show();
-            return;
-        }
+            if (performance.isChecked()) {
+                tempAssessmentType = "Performance";
+            } else if (objective.isChecked()) {
+                tempAssessmentType = "Objective";
+            }
 
-        if (performance.isChecked()) {
-            tempAssessmentType = "Performance";
-        } else if (objective.isChecked()) {
-            tempAssessmentType = "Objective";
-        }
+            if (assessmentTitle.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (assessmentTitle.getText().toString().length() > 25) {
+                Toast.makeText(this, "Please choose a title 25 or less characters.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (getStart.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You must pick a Start Date", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-        if (assessmentTitle.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (assessmentTitle.getText().toString().length() > 25) {
-            Toast.makeText(this, "Please choose a title 25 or less characters.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (getStart.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You must pick a Start Date", Toast.LENGTH_LONG).show();
-            return;
-        }
+            if (getEnd.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
+            SimpleDateFormat date = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
+            Date startDate = date.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
+            Date endDate = date.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
 
-        if (getEnd.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
-            return;
-        }
-        // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
-        SimpleDateFormat date = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
-        Date startDate = date.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
-        Date endDate = date.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
+            //Making sure Start Date is before the End Date
+            if (endDate.before(startDate)) {
+                Toast.makeText(this, "Assessment End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            //Not allowing for Start Date to be equal to End Date.
+            if (startDate.equals(endDate)) {
+                Toast.makeText(this, "Assessment Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+            }
 
-        //Making sure Start Date is before the End Date
-        if (endDate.before(startDate)) {
-            Toast.makeText(this, "Assessment End Date must be after Start Date.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        //Not allowing for Start Date to be equal to End Date.
-        if (startDate.equals(endDate)) {
-            Toast.makeText(this, "Assessment Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
-        }
+            else if (moddingAssessment != null) {
+                Log.println(Log.INFO,"debug", "Mod assessment logic here");
+                Repository repo = new Repository(getApplication());
+                Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+                repo.updateAssessment(modAssessment);
 
-        else if (moddingAssessment != null) {
-            Log.println(Log.INFO,"debug", "Mod assessment logic here");
-            Repository repo = new Repository(getApplication());
-            Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
-            repo.updateAssessment(modAssessment);
+                Long alertStartTime = startDate.getTime();
+                Long alertEndTime = endDate.getTime();
 
-            Long alertStartTime = startDate.getTime();
-            Long alertEndTime = endDate.getTime();
+                Intent notificationStartIntent = new Intent(AddAssessment.this, MyReceiver.class);
+                Intent notificationEndIntent = new Intent(AddAssessment.this, MyReceiver.class);
 
-            Intent notificationStartIntent = new Intent(AddAssessment.this, MyReceiver.class);
-            Intent notificationEndIntent = new Intent(AddAssessment.this, MyReceiver.class);
+                notificationStartIntent.putExtra("key", "Assessment starts today: " + assessmentTitle.getText());
+                notificationEndIntent.putExtra("key", assessmentTitle.getText() + " Assessment Ends today.");
 
-            notificationStartIntent.putExtra("key", "Assessment starts today: " + assessmentTitle.getText());
-            notificationEndIntent.putExtra("key", assessmentTitle.getText() + " Assessment Ends today.");
+                //Pending intents
+                PendingIntent startTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationStartIntent, 0);
+                PendingIntent endTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationEndIntent, 0);
 
-            //Pending intents
-            PendingIntent startTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationStartIntent, 0);
-            PendingIntent endTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationEndIntent, 0);
+                AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-            AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+                alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
-            alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
-            alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+                Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+            }else {
 
+                //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
+                Repository repo = new Repository(getApplication());
+                Assessment newAssessment = new Assessment(0,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+                repo.insertAssessment(newAssessment);
 
-            Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
-        }else {
+                Long alertStartTime = startDate.getTime();
+                Long alertEndTime = endDate.getTime();
 
-            //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
-            Repository repo = new Repository(getApplication());
-            Assessment newAssessment = new Assessment(0,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
-            repo.insertAssessment(newAssessment);
+                Intent notificationStartIntent = new Intent(AddAssessment.this, MyReceiver.class);
+                Intent notificationEndIntent = new Intent(AddAssessment.this, MyReceiver.class);
 
-            Long alertStartTime = startDate.getTime();
-            Long alertEndTime = endDate.getTime();
+                notificationStartIntent.putExtra("key", "Assessment starts today: " + assessmentTitle.getText());
+                notificationEndIntent.putExtra("key", assessmentTitle.getText() + " Assessment Ends today.");
 
-            Intent notificationStartIntent = new Intent(AddAssessment.this, MyReceiver.class);
-            Intent notificationEndIntent = new Intent(AddAssessment.this, MyReceiver.class);
+                //Pending intents
+                PendingIntent startTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationStartIntent, 0);
+                PendingIntent endTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationEndIntent, 0);
 
-            notificationStartIntent.putExtra("key", "Assessment starts today: " + assessmentTitle.getText());
-            notificationEndIntent.putExtra("key", assessmentTitle.getText() + " Assessment Ends today.");
+                AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-            //Pending intents
-            PendingIntent startTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationStartIntent, 0);
-            PendingIntent endTime = PendingIntent.getBroadcast(AddAssessment.this, MainActivity.alertNum++, notificationEndIntent, 0);
+                alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+                alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
-            AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
 
-            alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
-            alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
-
-            Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
-
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
     }
