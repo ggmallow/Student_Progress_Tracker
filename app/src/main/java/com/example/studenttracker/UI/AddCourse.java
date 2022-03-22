@@ -59,6 +59,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public TextView instructorEmail; //Setting up Instructor Email TextView.
 
     public Button saveCourse;
+    public Button attachAssessment;
+    public Button detachAssessment;
+    public Button shareNotes;
 
     //Used for modding course
     public Bundle moddingCourse;
@@ -84,6 +87,10 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         getStart = findViewById(R.id.startDate);
         getEnd = findViewById(R.id.endDate);
         courseNotes = findViewById(R.id.courseNotes);
+        attachAssessment = findViewById(R.id.attachAssessment);
+        detachAssessment = findViewById(R.id.detachAssessment);
+        shareNotes = findViewById(R.id.shareNotes);
+        shareNotes.setVisibility(View.GONE); //Hiding unless coming from Course Details button.
         detailsInfo = findViewById(R.id.detailsInfo);
         detailsInfo.setVisibility(View.GONE);
 
@@ -155,9 +162,13 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             instructorSpinner.setEnabled(false);
             instructorPhone.setEnabled(false);
             instructorEmail.setEnabled(false);
+            attachAssessment.setEnabled(false);
+            detachAssessment.setEnabled(false);
             courseNotes.setEnabled(false);
+            shareNotes.setVisibility(View.VISIBLE); //Hiding unless coming from Course Details button.
             saveCourse.setVisibility(View.GONE);
             detailsInfo.setVisibility(View.VISIBLE);
+
 
 
             }

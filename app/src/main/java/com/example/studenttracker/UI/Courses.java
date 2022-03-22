@@ -56,7 +56,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
     public void editCourse(View view) {
         if (previouslySelected == -1) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = new Intent(Courses.this,AddCourse.class);
@@ -85,7 +85,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
         //Handles button click, when no assessment is selected.
         if (previouslySelected == -1) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
             return;
         }
 

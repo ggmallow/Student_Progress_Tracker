@@ -193,6 +193,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/instructorEmail" />
 
+                <Button
+                    android:id="@+id/shareNotes"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="145dp"
+                    android:text=""
+                    app:icon="@drawable/share"
+                    app:layout_constraintBottom_toTopOf="@+id/saveCourse"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/courseNotes" />
+
                 <EditText
                     android:id="@+id/courseNotes"
                     android:layout_width="250dp"

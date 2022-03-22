@@ -41,6 +41,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public Button saveTerm;
     public TextView detailsInfo;
 
+
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
     public DatePickerDialog datePickerDialog2;
