@@ -205,7 +205,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     allCourses.get(passedPosition).getTitle(),
                     allCourses.get(passedPosition).getStartDate(),
                     allCourses.get(passedPosition).getEndDate(),
-                    allCourses.get(passedPosition).getStatus());
+                    allCourses.get(passedPosition).getStatus(),
+                    allCourses.get(passedPosition).getInstructor(),
+                    allCourses.get(passedPosition).getCourseNotes());
 
             courseTitle.setText(modifiedCourse.getTitle());
             getStart.setText(modifiedCourse.getStartDate());
@@ -397,12 +399,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
 
         } else if (moddingCourse != null) {
+
             Repository repo = new Repository(getApplication());
             Course modCourse = new Course(modID,
                     courseTitle.getText().toString(),
                     getStart.getText().toString(),
                     getEnd.getText().toString(),
-                    statusSpinner.getSelectedItem().toString());
+                    statusSpinner.getSelectedItem().toString(),
+                    instructorSpinner.getSelectedItem().toString(),
+                    courseNotes.getText().toString()
+                    );
             repo.updateCourse(modCourse);
             Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
         }else {
@@ -412,7 +418,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     courseTitle.getText().toString(),
                     getStart.getText().toString(),
                     getEnd.getText().toString(),
-                    statusSpinner.getSelectedItem().toString());
+                    statusSpinner.getSelectedItem().toString(),
+                    instructorSpinner.getSelectedItem().toString(),
+                    courseNotes.getText().toString());
             repo.insertCourse(newCourse);
             Toast.makeText(this, "Course Saved, Check Database.", Toast.LENGTH_LONG).show();
         }

@@ -105,7 +105,9 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
                 allCourses.get(position).getTitle(),
                 allCourses.get(position).getStartDate(),
                 allCourses.get(position).getEndDate(),
-                allCourses.get(position).getStatus());
+                allCourses.get(position).getStatus(),
+                allCourses.get(position).getInstructor(),
+                allCourses.get(position).getCourseNotes());
 
     }
 }
