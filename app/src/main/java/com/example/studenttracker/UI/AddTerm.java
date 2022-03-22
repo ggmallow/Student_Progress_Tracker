@@ -5,8 +5,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -256,51 +260,94 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     public void saveTerm(View view) throws ParseException {
 
-        if (termName.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't entered a Term Name", Toast.LENGTH_LONG).show();
-            return;
+        try {
+            if (termName.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't entered a Term Name", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (getStart.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't set a Start Date", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (getEnd.getText().toString().isEmpty()) {
+                Toast.makeText(this, "You haven't set a End Date", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
+            SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
+            Date startDate = test.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
+            Date endDate = test.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
+
+            //Making sure Start Date is before the End Date
+            if (endDate.before(startDate)) {
+                Toast.makeText(this, "Term End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            //Not allowing for Start Date to be equal to End Date.
+            if (startDate.equals(endDate)) {
+                Toast.makeText(this, "Term Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+            } else if (moddingTerm != null) {
+                Log.println(Log.INFO,"debug", "Mod Term logic here");
+                Repository repo = new Repository(getApplication());
+                Term modTerm = new Term(modID, termName.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+                repo.updateTerm(modTerm);
+
+                Long alertStartTime = startDate.getTime();
+                Long alertEndTime = endDate.getTime();
+
+                Intent notificationStartIntent = new Intent(AddTerm.this, MyReceiver.class);
+                Intent notificationEndIntent = new Intent(AddTerm.this, MyReceiver.class);
+
+                notificationStartIntent.putExtra("key", "Term starts today: " + termName.getText());
+                notificationEndIntent.putExtra("key", termName.getText() + ": Term Ends today.");
+
+                //Pending intents
+                PendingIntent startTime = PendingIntent.getBroadcast(AddTerm.this, MainActivity.alertNum++, notificationStartIntent, 0);
+                PendingIntent endTime = PendingIntent.getBroadcast(AddTerm.this, MainActivity.alertNum++, notificationEndIntent, 0);
+
+                AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+                alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+
+
+                Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+            } else {
+                Repository repo = new Repository(getApplication());
+                Term newTerm = new Term(0,
+                        termName.getText().toString(),
+                        getStart.getText().toString(),
+                        getEnd.getText().toString());
+                repo.insertTerm(newTerm);
+
+                Long alertStartTime = startDate.getTime();
+                Long alertEndTime = endDate.getTime();
+
+                Intent notificationStartIntent = new Intent(AddTerm.this, MyReceiver.class);
+                Intent notificationEndIntent = new Intent(AddTerm.this, MyReceiver.class);
+
+                notificationStartIntent.putExtra("key", "Term starts today: " + termName.getText());
+                notificationEndIntent.putExtra("key", termName.getText() + " Term Ends today.");
+
+                //Pending intents
+                PendingIntent startTime = PendingIntent.getBroadcast(AddTerm.this, MainActivity.alertNum++, notificationStartIntent, 0);
+                PendingIntent endTime = PendingIntent.getBroadcast(AddTerm.this, MainActivity.alertNum++, notificationEndIntent, 0);
+
+                AlarmManager alarmManagerStart = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManagerEnd = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
+                alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
+
+                Toast.makeText(this, "Term Saved, Check Database.", Toast.LENGTH_LONG).show();
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
-        if (getStart.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't set a Start Date", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (getEnd.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You haven't set a End Date", Toast.LENGTH_LONG).show();
-            return;
-        }
-        // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
-        SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
-        Date startDate = test.parse(getStart.getText().toString()); // Converting String, getStart to startDate as a Date Object.
-        Date endDate = test.parse(getEnd.getText().toString()); // Converting String, getEnd to endDate as a Date Object.
-
-        //Making sure Start Date is before the End Date
-        if (endDate.before(startDate)) {
-            Toast.makeText(this, "Term End Date must be after Start Date.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        //Not allowing for Start Date to be equal to End Date.
-        if (startDate.equals(endDate)) {
-            Toast.makeText(this, "Term Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
-        } else if (moddingTerm != null) {
-            Log.println(Log.INFO,"debug", "Mod Term logic here");
-            Repository repo = new Repository(getApplication());
-            Term modTerm = new Term(modID, termName.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
-            repo.updateTerm(modTerm);
-            Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
-        } else {
-            Repository repo = new Repository(getApplication());
-            Term newTerm = new Term(0,
-                    termName.getText().toString(),
-                    getStart.getText().toString(),
-                    getEnd.getText().toString());
-            repo.insertTerm(newTerm);
-            Toast.makeText(this, "Term Saved, Check Database.", Toast.LENGTH_LONG).show();
-
-        }
-
-
 
 
     }
