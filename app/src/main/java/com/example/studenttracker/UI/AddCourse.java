@@ -2,6 +2,9 @@ package com.example.studenttracker.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -33,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener , AssessmentAdapter.assessmentClickListener{
 
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
@@ -43,6 +46,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     private TextView getStart; //Setting Start Date.
     private TextView getEnd; //Setting End Date.
     public TextView detailsInfo;
+    public TextView courseNotes;
 
     public Spinner statusSpinner; //Setting up Spinner for Status.
     public ArrayAdapter statusAdapter;
@@ -64,6 +68,14 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     //Used for detailed View
     public Bundle courseDetails;
 
+    //Setting up for selecting Assessments.
+    public ArrayList<Assessment> allAssessments = new ArrayList<>();
+    public RecyclerView allAssessmentsRecycler;
+
+    public Course selectedAssessment; // Used to pick courses in Recycler View
+    public Integer previouslySelected = -1; //Detects clicked location in Recycler View.
+    public AssessmentAdapter assessmentAdapter; // Borrowed adapter from Assessment activity, to display data properly.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +83,10 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
         getStart = findViewById(R.id.startDate);
         getEnd = findViewById(R.id.endDate);
+        courseNotes = findViewById(R.id.courseNotes);
         detailsInfo = findViewById(R.id.detailsInfo);
         detailsInfo.setVisibility(View.GONE);
+
 
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
@@ -90,8 +104,24 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         instructorList.add(testInstructor2);
         initInstructorPicker(); //Loads menu with instructors.
 
+
+        //Setting up for selecting Assessments.
+        allAssessments = new ArrayList<Assessment>(); //Initiating new ArrayList
+        Repository repo = new Repository(getApplication()); //Creating new Repository to get Assessments.
+        allAssessments.addAll(repo.getAllAssessments()); // Actually adding all assessments from the allAssessments database.
+
+        assessmentAdapter = new AssessmentAdapter(allAssessments, this); // Change allAssessments to array of courses attached.
+        allAssessmentsRecycler = findViewById(R.id.attachedAssessments);
+        RecyclerView.LayoutManager assessmentLayout = new LinearLayoutManager(getApplicationContext());
+        allAssessmentsRecycler.setLayoutManager(assessmentLayout);
+        allAssessmentsRecycler.setItemAnimator(new DefaultItemAnimator());
+        allAssessmentsRecycler.setAdapter(assessmentAdapter);
+
+
         modCourseInit();  //Setting up for modding Course.
         courseDetailsInit(); //Setting up if navigating form Course Details button.
+
+
 
 
 
@@ -125,10 +155,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             instructorSpinner.setEnabled(false);
             instructorPhone.setEnabled(false);
             instructorEmail.setEnabled(false);
+            courseNotes.setEnabled(false);
             saveCourse.setVisibility(View.GONE);
             detailsInfo.setVisibility(View.VISIBLE);
-
-
 
 
             }
@@ -381,4 +410,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
 
+    @Override
+    public void onAssessmentClick(int position) {
+
+    }
 }

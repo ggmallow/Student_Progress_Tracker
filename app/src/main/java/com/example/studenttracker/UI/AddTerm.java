@@ -74,6 +74,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         initEndDatePicker(); //Sets up the date picker for End Date.
 
         detailsInfo.setVisibility(View.GONE);
+
         allCourses = new ArrayList<Course>(); //Initiating new ArrayList
         Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
         allCourses.addAll(repo.getAllCourses()); // Actually adding all courses from the allCourses database.

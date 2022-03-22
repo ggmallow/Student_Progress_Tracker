@@ -128,6 +128,71 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/instructorPhone" />
 
+                <Button
+                    android:id="@+id/attachAssessment"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="140dp"
+                    android:text=""
+                    app:icon="@drawable/add"
+                    app:layout_constraintBottom_toTopOf="@+id/courseNotes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayoutCourses" />
+
+                <Button
+                    android:id="@+id/detachAssessment"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="90dp"
+                    android:text=""
+                    app:icon="@drawable/delete"
+                    app:layout_constraintBottom_toTopOf="@+id/courseNotes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayoutCourses" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutCourses"
+                    android:layout_width="250dp"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginTop="33dp"
+                    android:layout_marginEnd="80dp"
+                    android:background="@drawable/border"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/assessments">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/attachedAssessments"
+                        android:layout_width="240dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        app:layout_constraintStart_toStartOf="parent">
+
+
+                    </androidx.recyclerview.widget.RecyclerView>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/assessments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="154dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="154dp"
+                    android:text="Assessments"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.49"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/instructorEmail" />
+
                 <EditText
                     android:id="@+id/courseNotes"
                     android:layout_width="250dp"
@@ -135,12 +200,12 @@
                     android:layout_marginStart="13dp"
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="13dp"
+                    android:background="@drawable/border"
                     android:ems="10"
                     android:hint="Course Notes (optional)"
-                    android:background="@drawable/border"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/instructorEmail" />
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCourses" />
 
                 <Button
                     android:id="@+id/saveCourse"
@@ -150,8 +215,8 @@
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="13dp"
                     android:ems="10"
-                    android:text="Save"
                     android:onClick="saveCourse"
+                    android:text="Save"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/courseNotes" />
@@ -163,8 +228,8 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="20dp"
-                    android:textStyle="bold"
                     android:text="You can not change details from the Course Details menu. If you need to edit a course, visit the edit menu."
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/courseNotes" />
