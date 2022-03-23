@@ -215,7 +215,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     allCourses.get(passedPosition).getEndDate(),
                     allCourses.get(passedPosition).getStatus(),
                     allCourses.get(passedPosition).getInstructor(),
-                    allCourses.get(passedPosition).getCourseNotes());
+                    allCourses.get(passedPosition).getCourseNotes(), null);
 
             courseTitle.setText(modifiedCourse.getTitle());
             getStart.setText(modifiedCourse.getStartDate());
@@ -406,8 +406,14 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             }
             if (statusSpinner.getSelectedItem().equals("Select a Status")) {
                     Toast.makeText(this, "You must select a valid status", Toast.LENGTH_LONG).show();
-
+                return;
             }
+            /*
+
+            if (courseNotes.getText().toString().isEmpty()) {
+                courseNotes.setText("A note was not entered.");
+                return;
+            } */
 
             // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
             SimpleDateFormat date = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
@@ -422,6 +428,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             //Not allowing for Start Date to be equal to End Date.
             if (startDate.equals(endDate)) {
                 Toast.makeText(this, "Course Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+
             }
 
             else if (moddingCourse != null) {
@@ -433,7 +440,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                         getEnd.getText().toString(),
                         statusSpinner.getSelectedItem().toString(),
                         instructorSpinner.getSelectedItem().toString(),
-                        courseNotes.getText().toString()
+                        courseNotes.getText().toString(), null
                         );
                 repo.updateCourse(modCourse);
 
@@ -468,7 +475,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                         getEnd.getText().toString(),
                         statusSpinner.getSelectedItem().toString(),
                         instructorSpinner.getSelectedItem().toString(),
-                        courseNotes.getText().toString());
+                        courseNotes.getText().toString(),null);
                 repo.insertCourse(newCourse);
 
                 Long alertStartTime = startDate.getTime();

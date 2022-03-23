@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @Entity(tableName = "assessments")
 public class Assessment {
     @PrimaryKey(autoGenerate = true)
-    private int assessmentID;
+    private Integer assessmentID;
 
     private String assessmentType;
     private String assessmentTitle;
     private String startDate;
     private String endDate;
 
-    public Assessment(int assessmentID, String assessmentType, String assessmentTitle, String startDate, String endDate) {
+    public Assessment(Integer assessmentID, String assessmentType, String assessmentTitle, String startDate, String endDate) {
         this.assessmentID = assessmentID;
         this.assessmentType = assessmentType;
         this.assessmentTitle = assessmentTitle;
@@ -25,11 +25,11 @@ public class Assessment {
         this.endDate = endDate;
     }
 
-    public int getAssessmentID() {
+    public Integer getAssessmentID() {
         return assessmentID;
     }
 
-    public void setAssessmentID(int assessmentID) {
+    public void setAssessmentID(Integer assessmentID) {
         this.assessmentID = assessmentID;
     }
 

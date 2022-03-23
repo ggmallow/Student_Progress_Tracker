@@ -1,15 +1,18 @@
 package com.example.studenttracker.Models;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-@Entity(tableName = "courses")
+@Entity(tableName = "courses",
+foreignKeys = @ForeignKey(entity = Term.class, parentColumns = "termID", childColumns = "termID"))
 public class Course {
     @PrimaryKey(autoGenerate = true)
-    private int courseID;
+
+    private Integer courseID;
 
     private String title;
     private String startDate;
@@ -17,10 +20,10 @@ public class Course {
     private String status;
     private String instructor;
     private String courseNotes;
-    //private ArrayList attachedAssessments; // If problems saving, it might be because Integer vs int.
+    private Integer termID;
 
 
-    public Course(int courseID, String title, String startDate, String endDate,String status, String instructor, String courseNotes /* ArrayList attachedAssessments */) {
+    public Course(Integer courseID, String title, String startDate, String endDate,String status, String instructor, String courseNotes, Integer termID) {
         this.courseID = courseID;
         this.title = title;
         this.startDate = startDate;
@@ -28,26 +31,15 @@ public class Course {
         this.status = status;
         this.instructor = instructor;
         this.courseNotes = courseNotes;
-       // this.attachedAssessments = attachedAssessments;
-    }
-/* This may not even be needed.
-    public ArrayList<Integer> getAttachedAssessments() {
-        return attachedAssessments;
+        this.termID = termID;
     }
 
-    public void setAttachedAssessments(ArrayList<Integer> attachedAssessments) {
-        this.attachedAssessments = attachedAssessments;
-    }
-    //This may be used but, I am handling objects different than I am used too.
-   /* public void addAssociatedAssessment(Assessment selectedAssessment) {
-        attachedAssessments.add(selectedPart.getAssessmentID);
-    } */
 
-    public int getCourseID() {
+    public Integer getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(int courseID) {
+    public void setCourseID(Integer courseID) {
         this.courseID = courseID;
     }
 
@@ -98,14 +90,12 @@ public class Course {
     public void setCourseNotes(String courseNotes) {
         this.courseNotes = courseNotes;
     }
-/*
-    public ArrayList<Integer> getAttachedAssessments() {
-        return attachedAssessments;
+
+    public Integer getTermID() {
+        return termID;
     }
 
-    public void setAttachedAssessments(ArrayList attachedAssessments) {
-        this.attachedAssessments = attachedAssessments;
+    public void setTermID(Integer termID) {
+        this.termID = termID;
     }
-    */
-
 }
