@@ -1,13 +1,15 @@
 package com.example.studenttracker.Models;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
 
 //Does this model require a startDate?
 
-@Entity(tableName = "assessments")
+@Entity(tableName = "assessments",
+        foreignKeys = @ForeignKey(entity = Course.class,parentColumns = "courseID", childColumns = "courseID"))
 public class Assessment {
     @PrimaryKey(autoGenerate = true)
     private Integer assessmentID;
@@ -16,13 +18,15 @@ public class Assessment {
     private String assessmentTitle;
     private String startDate;
     private String endDate;
+    private Integer courseID;
 
-    public Assessment(Integer assessmentID, String assessmentType, String assessmentTitle, String startDate, String endDate) {
+    public Assessment(Integer assessmentID, String assessmentType, String assessmentTitle, String startDate, String endDate, Integer courseID) {
         this.assessmentID = assessmentID;
         this.assessmentType = assessmentType;
         this.assessmentTitle = assessmentTitle;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.courseID = courseID;
     }
 
     public Integer getAssessmentID() {
@@ -63,6 +67,14 @@ public class Assessment {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public Integer getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(Integer courseID) {
+        this.courseID = courseID;
     }
 
     @Override

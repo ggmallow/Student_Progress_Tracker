@@ -124,7 +124,7 @@ public class AddAssessment extends AppCompatActivity {
                         allAssessments.get(passedPosition).getAssessmentType(),
                         allAssessments.get(passedPosition).getAssessmentTitle(),
                         allAssessments.get(passedPosition).getStartDate(),
-                        allAssessments.get(passedPosition).getEndDate());
+                        allAssessments.get(passedPosition).getEndDate(), null);
 
                 //Populating form data
                 if (assessmentDetails.getAssessmentType().equals("Performance")) {
@@ -171,7 +171,7 @@ public class AddAssessment extends AppCompatActivity {
                     allAssessments.get(passedPosition).getAssessmentType(),
                     allAssessments.get(passedPosition).getAssessmentTitle(),
                     allAssessments.get(passedPosition).getStartDate(),
-                    allAssessments.get(passedPosition).getEndDate());
+                    allAssessments.get(passedPosition).getEndDate(), null);
             modID = modAssessment.getAssessmentID();
 
             if (modAssessment.getAssessmentType().equals("Performance")) {
@@ -346,7 +346,7 @@ public class AddAssessment extends AppCompatActivity {
             else if (moddingAssessment != null) {
                 Log.println(Log.INFO,"debug", "Mod assessment logic here");
                 Repository repo = new Repository(getApplication());
-                Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+                Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString(), null);
                 repo.updateAssessment(modAssessment);
 
                 Long alertStartTime = startDate.getTime();
@@ -373,7 +373,13 @@ public class AddAssessment extends AppCompatActivity {
 
                 //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
                 Repository repo = new Repository(getApplication());
-                Assessment newAssessment = new Assessment(0,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+                Assessment newAssessment = new Assessment(
+                        0,
+                        tempAssessmentType,
+                        assessmentTitle.getText().toString(),
+                        getStart.getText().toString(),
+                        getEnd.getText().toString(),
+                        null);
                 repo.insertAssessment(newAssessment);
 
                 Long alertStartTime = startDate.getTime();

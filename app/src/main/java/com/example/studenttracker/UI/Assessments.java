@@ -114,7 +114,7 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
                     allAssessments.get(position).getAssessmentType(),
                     allAssessments.get(position).getAssessmentTitle(),
                     allAssessments.get(position).getStartDate(),
-                    allAssessments.get(position).getEndDate());
+                    allAssessments.get(position).getEndDate(), null);
 
     }
 
