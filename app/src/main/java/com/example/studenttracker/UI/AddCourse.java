@@ -605,10 +605,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     public void detachAssessment(View view) {
-
-
-        /* This actually belongs here
-        Log.println(Log.INFO,"debug", String.valueOf(assessmentAdapter2.checkedPosition));
+        
         if (assessmentAdapter2.checkedPosition == -1) {
             Log.println(Log.INFO,"debug", "You must select an assessment.");
 
@@ -618,12 +615,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
            assessmentsAttached.remove(assessmentAdapter2.checkedPosition);
            assessmentAdapter2.notifyDataSetChanged();
         }
-*/
-        //This will be used to loop through all attached assessments and added the newest created course to their courseID field.
-        for (Assessment attachingCourse: assessmentsAttached) {
-            Log.println(Log.INFO,"debug", "Course Names: " + attachingCourse.getAssessmentTitle());
-        }
-
 
 
 
