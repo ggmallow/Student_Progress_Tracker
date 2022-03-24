@@ -71,7 +71,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public Button saveCourse;
 
     public Button attachAssessment;
-    public ArrayAdapter attachAssessmentAdapter;
     public Button detachAssessment;
 
     public Button shareNotes;
@@ -139,7 +138,19 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         tempAssessmentsAttached = new ArrayList<>();
         Repository repo = new Repository(getApplication()); //Creating new Repository to get Assessments.
         allAssessments.addAll(repo.getAllAssessments()); // Actually adding all assessments from the allAssessments database. Probably not needed anymore.
+
+
         tempAssessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
+        //Add loop for null foreign key on Assessments
+        ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
+        for (Assessment nullCourse: tempAssessmentsAttached) {
+            if (nullCourse.getCourseID() == null) {
+                tempAssessmentsAttachedCopy.add(nullCourse);
+            }
+
+        }
+        tempAssessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
+        tempAssessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
 
         assessmentAdapter = new AssessmentAdapter(tempAssessmentsAttached, this); // Change allAssessments to array of courses attached.
@@ -213,7 +224,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     //Method to set up fields if coming from the Course edit button.
     private void modCourseInit() {
-
         moddingCourse = getIntent().getExtras();
         if (moddingCourse != null) {
             courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
@@ -250,6 +260,20 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
             statusSpinner.setSelection(statusAdapter.getPosition(allCourses.get(passedPosition).getStatus()));
             courseNotes.setText(allCourses.get(passedPosition).getCourseNotes());
+
+
+            //Setting up Attached Assessments box.
+            assessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
+            //Add loop for null foreign key on Assessments
+            ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
+            for (Assessment nullCourse: assessmentsAttached) {
+                if (nullCourse.getCourseID() == allCourses.get(passedPosition).getCourseID()) {
+                    tempAssessmentsAttachedCopy.add(nullCourse);
+                }
+
+            }
+            assessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
+            assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
         }
     }
@@ -605,7 +629,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     public void detachAssessment(View view) {
-        
+
         if (assessmentAdapter2.checkedPosition == -1) {
             Log.println(Log.INFO,"debug", "You must select an assessment.");
 
