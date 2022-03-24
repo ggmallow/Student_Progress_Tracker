@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -44,7 +46,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener , AssessmentAdapter.assessmentClickListener{
+public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener , AssessmentAdapter.assessmentClickListener, AssessmentAdapter2.assessmentClickListener2{
 
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
@@ -67,8 +69,11 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public TextView instructorEmail; //Setting up Instructor Email TextView.
 
     public Button saveCourse;
+
     public Button attachAssessment;
+    public ArrayAdapter attachAssessmentAdapter;
     public Button detachAssessment;
+
     public Button shareNotes;
 
     //Used for modding course
@@ -81,9 +86,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     //Setting up for selecting Assessments.
     public ArrayList<Assessment> allAssessments = new ArrayList<>();
+    public ArrayList<Assessment> assessmentsAttached = new ArrayList<>();
+    public ArrayList<Assessment> tempAssessmentsAttached = new ArrayList<>();
     public RecyclerView allAssessmentsRecycler;
 
-    public Course selectedAssessment; // Used to pick courses in Recycler View
+    public RecyclerView assessmentsToCompleteRecycler;
+    public AssessmentAdapter2 assessmentAdapter2; // Borrowed adapter from Assessment activity, to display data properly.
+
+
+
+    public Assessment selectedAssessment; // Used to pick courses in Recycler View
     public Integer previouslySelected = -1; //Detects clicked location in Recycler View.
     public AssessmentAdapter assessmentAdapter; // Borrowed adapter from Assessment activity, to display data properly.
 
@@ -112,6 +124,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         statusSpinner.setAdapter(statusAdapter);
 
 
+
+
         //Adding instructors
         Instructor testInstructor = new Instructor("John", 1234561234, "test@wgu.edu");
         instructorList.add(testInstructor);
@@ -122,21 +136,32 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
         //Setting up for selecting Assessments.
         allAssessments = new ArrayList<Assessment>(); //Initiating new ArrayList
+        tempAssessmentsAttached = new ArrayList<>();
         Repository repo = new Repository(getApplication()); //Creating new Repository to get Assessments.
-        allAssessments.addAll(repo.getAllAssessments()); // Actually adding all assessments from the allAssessments database.
+        allAssessments.addAll(repo.getAllAssessments()); // Actually adding all assessments from the allAssessments database. Probably not needed anymore.
+        tempAssessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
 
-        assessmentAdapter = new AssessmentAdapter(allAssessments, this); // Change allAssessments to array of courses attached.
+
+        assessmentAdapter = new AssessmentAdapter(tempAssessmentsAttached, this); // Change allAssessments to array of courses attached.
         allAssessmentsRecycler = findViewById(R.id.attachedAssessments);
         RecyclerView.LayoutManager assessmentLayout = new LinearLayoutManager(getApplicationContext());
         allAssessmentsRecycler.setLayoutManager(assessmentLayout);
         allAssessmentsRecycler.setItemAnimator(new DefaultItemAnimator());
         allAssessmentsRecycler.setAdapter(assessmentAdapter);
 
+        //Setting up for Selected Assessments
+        assessmentsAttached = new ArrayList<>();
+        assessmentAdapter2 = new AssessmentAdapter2(assessmentsAttached, this);
+        assessmentsToCompleteRecycler = findViewById(R.id.assessmentsToComplete);
+        RecyclerView.LayoutManager assessmentLayout2 = new LinearLayoutManager(getApplicationContext());
+        assessmentsToCompleteRecycler.setLayoutManager(assessmentLayout2);
+        assessmentsToCompleteRecycler.setItemAnimator(new DefaultItemAnimator());
+        assessmentsToCompleteRecycler.setAdapter(assessmentAdapter2);
+
+
 
         modCourseInit();  //Setting up for modding Course.
         courseDetailsInit(); //Setting up if navigating form Course Details button.
-
-
 
 
 
@@ -276,7 +301,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 String makeDateString = makeDateString(day, month, year);
                 getStart.setText(makeDateString);
 
-
             }
         };
 
@@ -367,10 +391,11 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
 
-
     //Used for OnItemSelected Listener.
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+
     }
 
     @Override
@@ -378,7 +403,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-//Work needed but parts now enter the database. Need to check Dates for errors still.
+// Need to check Dates for errors still.
     public void saveCourse(View view) throws ParseException {
         courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
         getStart = findViewById(R.id.startDate); //Setting Start Date.
@@ -469,7 +494,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             }else {
 
                 Repository repo = new Repository(getApplication());
-                Course newCourse = new Course(0,
+
+                Course newCourse = new Course(null,
                         courseTitle.getText().toString(),
                         getStart.getText().toString(),
                         getEnd.getText().toString(),
@@ -477,6 +503,36 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                         instructorSpinner.getSelectedItem().toString(),
                         courseNotes.getText().toString(),null);
                 repo.insertCourse(newCourse);
+
+                //Attempting association of assessment to course.
+                //Find last created course
+                allCourses = new ArrayList<Course>();
+                allCourses.addAll(repo.getAllCourses());
+                int maxID = allCourses.get(0).getCourseID();
+
+                for (int i=1; i<allCourses.size(); i++) {
+                    if (allCourses.get(i).getCourseID() > maxID) {
+                        maxID = allCourses.get(i).getCourseID();
+                    }
+
+                }
+                Log.println(Log.INFO,"debug", "Max ID is: " + maxID);
+
+
+                //Update all Assessments in assessmentsAttached to hold course ID found.
+
+
+                for (Assessment attachingCourse: assessmentsAttached) {
+                    Assessment modTest = new Assessment(attachingCourse.getAssessmentID(),
+                            attachingCourse.getAssessmentType(),
+                            attachingCourse.getAssessmentTitle(),
+                            attachingCourse.getStartDate(),
+                            attachingCourse.getEndDate(),maxID);
+                    repo.updateAssessment(modTest);
+
+                }
+
+
 
                 Long alertStartTime = startDate.getTime();
                 Long alertEndTime = endDate.getTime();
@@ -510,7 +566,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     @Override
     public void onAssessmentClick(int position) {
-
+        Log.println(Log.INFO,"debug", "Adapter 1: " + tempAssessmentsAttached.get(position).getAssessmentID() + " with Title: " + tempAssessmentsAttached.get(position).getAssessmentTitle());
+        selectedAssessment = new Assessment(tempAssessmentsAttached.get(position).getAssessmentID(),
+                tempAssessmentsAttached.get(position).getAssessmentType(),
+                tempAssessmentsAttached.get(position).getAssessmentTitle(),
+                tempAssessmentsAttached.get(position).getStartDate(),
+                tempAssessmentsAttached.get(position).getEndDate(),
+                null);
+        //assessmentsAttached.add(tempAssessmentsAttached.get(position));
+      //  tempAssessmentsAttached.remove(position);
+      //  Log.println(Log.INFO,"debug", "The content of assessmentAttached is: " + assessmentsAttached.get(position).getAssessmentTitle());
     }
 
     public void shareNotes(View view) {
@@ -522,5 +587,73 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
       sharedIntent.setType("text/plain");
       Intent sharedIntentChooser = Intent.createChooser(sharedIntent,null);
       startActivity(sharedIntentChooser);
+    }
+
+    public void attachAssessment(View view) {
+        if (assessmentAdapter.checkedPosition == -1) {
+            Log.println(Log.INFO,"debug", "You must select an assessment.");
+
+        } else {
+           assessmentsAttached.add(selectedAssessment);
+           assessmentAdapter2.notifyDataSetChanged();
+           tempAssessmentsAttached.remove(assessmentAdapter.checkedPosition);
+           assessmentAdapter.notifyDataSetChanged();
+           assessmentAdapter.checkedPosition = -1;
+           Log.println(Log.INFO,"debug", "The content of assessmentAttached is: " + selectedAssessment.getAssessmentID());
+        }
+
+    }
+
+    public void detachAssessment(View view) {
+
+
+        /* This actually belongs here
+        Log.println(Log.INFO,"debug", String.valueOf(assessmentAdapter2.checkedPosition));
+        if (assessmentAdapter2.checkedPosition == -1) {
+            Log.println(Log.INFO,"debug", "You must select an assessment.");
+
+        } else {
+           tempAssessmentsAttached.add(selectedAssessment);
+           assessmentAdapter.notifyDataSetChanged();
+           assessmentsAttached.remove(assessmentAdapter2.checkedPosition);
+           assessmentAdapter2.notifyDataSetChanged();
+        }
+*/
+        //This will be used to loop through all attached assessments and added the newest created course to their courseID field.
+        for (Assessment attachingCourse: assessmentsAttached) {
+            Log.println(Log.INFO,"debug", "Course Names: " + attachingCourse.getAssessmentTitle());
+        }
+
+
+
+
+        /* This finds MAX IDS and works.
+        Repository repo = new Repository(getApplication());
+        allCourses = new ArrayList<Course>();
+        allCourses.addAll(repo.getAllCourses());
+        int maxID = allCourses.get(0).getCourseID();
+
+        for (int i=1; i<allCourses.size(); i++) {
+            if (allCourses.get(i).getCourseID() > maxID) {
+                maxID = allCourses.get(i).getCourseID();
+            }
+
+        }
+        Log.println(Log.INFO,"debug", "Max ID is: " + maxID);
+
+ */
+    }
+
+
+    @Override
+    public void onAssessmentClick2(int position) {
+
+        selectedAssessment = new Assessment(assessmentsAttached.get(position).getAssessmentID(),
+                assessmentsAttached.get(position).getAssessmentType(),
+                assessmentsAttached.get(position).getAssessmentTitle(),
+                assessmentsAttached.get(position).getStartDate(),
+                assessmentsAttached.get(position).getEndDate(),
+                null);
+        Log.println(Log.INFO,"Adapter2: ", selectedAssessment.getAssessmentTitle());
     }
 }

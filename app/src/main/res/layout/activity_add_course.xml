@@ -135,12 +135,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="140dp"
+                    android:layout_marginBottom="90dp"
+                    android:onClick="attachAssessment"
                     android:text=""
                     app:icon="@drawable/add"
-                    app:layout_constraintBottom_toTopOf="@+id/courseNotes"
+                    app:layout_constraintBottom_toTopOf="@+id/selectedAssessments"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayoutCourses" />
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/selectedAssessments" />
 
                 <Button
                     android:id="@+id/detachAssessment"
@@ -150,6 +152,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="90dp"
+                    android:onClick="detachAssessment"
                     android:text=""
                     app:icon="@drawable/delete"
                     app:layout_constraintBottom_toTopOf="@+id/courseNotes"
@@ -186,12 +189,26 @@
                     android:layout_marginStart="154dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="154dp"
-                    android:text="Assessments"
+                    android:text="Available Assessments"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.49"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/instructorEmail" />
+
+                <TextView
+                    android:id="@+id/selectedAssessments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="154dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="154dp"
+                    android:text="Assessments Selected"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.49"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCourses" />
 
                 <Button
                     android:id="@+id/shareNotes"
@@ -201,12 +218,37 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="145dp"
-                    android:text=""
                     android:onClick="shareNotes"
+                    android:text=""
                     app:icon="@drawable/share"
                     app:layout_constraintBottom_toTopOf="@+id/saveCourse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/courseNotes" />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAssessments"
+                    android:layout_width="250dp"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginTop="33dp"
+                    android:layout_marginEnd="80dp"
+                    android:background="@drawable/border"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/selectedAssessments">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/assessmentsToComplete"
+                        android:layout_width="240dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        app:layout_constraintStart_toStartOf="parent">
+
+
+                    </androidx.recyclerview.widget.RecyclerView>
+                </RelativeLayout>
+
 
                 <EditText
                     android:id="@+id/courseNotes"
@@ -220,7 +262,7 @@
                     android:hint="Course Notes (optional)"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCourses" />
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayoutAssessments" />
 
                 <Button
                     android:id="@+id/saveCourse"

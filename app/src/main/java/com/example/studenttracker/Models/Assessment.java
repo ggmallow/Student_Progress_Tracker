@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
 
-//Does this model require a startDate?
 
 @Entity(tableName = "assessments",
         foreignKeys = @ForeignKey(entity = Course.class,parentColumns = "courseID", childColumns = "courseID"))

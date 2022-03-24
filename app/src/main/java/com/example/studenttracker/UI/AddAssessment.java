@@ -374,7 +374,7 @@ public class AddAssessment extends AppCompatActivity {
                 //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
                 Repository repo = new Repository(getApplication());
                 Assessment newAssessment = new Assessment(
-                        0,
+                        null,
                         tempAssessmentType,
                         assessmentTitle.getText().toString(),
                         getStart.getText().toString(),

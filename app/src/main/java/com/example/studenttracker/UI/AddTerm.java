@@ -317,7 +317,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                 Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
             } else {
                 Repository repo = new Repository(getApplication());
-                Term newTerm = new Term(0,
+                Term newTerm = new Term(null,
                         termName.getText().toString(),
                         getStart.getText().toString(),
                         getEnd.getText().toString());

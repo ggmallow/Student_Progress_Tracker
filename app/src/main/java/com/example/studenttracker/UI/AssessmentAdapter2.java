@@ -15,28 +15,28 @@ import com.example.studenttracker.R;
 
 import java.util.ArrayList;
 
-public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.MyViewHolder> {
+public class AssessmentAdapter2 extends RecyclerView.Adapter<AssessmentAdapter2.MyViewHolder> {
 
     private ArrayList<Assessment> allAssessmentList;
-    private assessmentClickListener mAssessmentClickListener;
+    private assessmentClickListener2 mAssessmentClickListener2;
     public int checkedPosition = -1;
 
 
 
-    public AssessmentAdapter(ArrayList<Assessment> allAssessmentList, assessmentClickListener assessmentClickListener) {
+    public AssessmentAdapter2(ArrayList<Assessment> allAssessmentList, assessmentClickListener2 assessmentClickListener2) {
         this.allAssessmentList = allAssessmentList;
-        this.mAssessmentClickListener = assessmentClickListener;
+        this.mAssessmentClickListener2 = assessmentClickListener2;
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView assessmentNameText;
-        assessmentClickListener assessmentClickListener;
+        assessmentClickListener2 assessmentClickListener2;
 
-        public MyViewHolder(final View view, assessmentClickListener assessmentClickListener) {
+        public MyViewHolder(final View view, assessmentClickListener2 assessmentClickListener2) {
             super(view);
             assessmentNameText = view.findViewById(R.id.assessmentName);
-            this.assessmentClickListener = assessmentClickListener;
+            this.assessmentClickListener2 = assessmentClickListener2;
 
             view.setOnClickListener(this);
 
@@ -46,7 +46,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.My
         @Override
         public void onClick(View view) {
 
-            mAssessmentClickListener.onAssessmentClick(getAdapterPosition());
+            mAssessmentClickListener2.onAssessmentClick2(getAdapterPosition());
 
 
         }
@@ -54,24 +54,24 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.My
 
     }
 
-    public interface assessmentClickListener {
+    public interface assessmentClickListener2 {
 
-        void onAssessmentClick(int  position);
+        void onAssessmentClick2(int  position);
 
     }
 
 
     @NonNull
     @Override
-    public AssessmentAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AssessmentAdapter2.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_assessment, parent, false);
 
 
-        return new MyViewHolder(itemView, mAssessmentClickListener);
+        return new MyViewHolder(itemView, mAssessmentClickListener2);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AssessmentAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AssessmentAdapter2.MyViewHolder holder, int position) {
 
 
         String assessmentName = allAssessmentList.get(position).getAssessmentTitle();
@@ -89,7 +89,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.My
 
         if (checkedPosition == position) {
             holder.assessmentNameText.setBackgroundColor(Color.parseColor("#FF018786"));
-            mAssessmentClickListener.onAssessmentClick(holder.getAdapterPosition());
+            mAssessmentClickListener2.onAssessmentClick2(holder.getAdapterPosition());
 
 
         } else {
