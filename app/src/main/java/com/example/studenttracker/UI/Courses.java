@@ -1,20 +1,27 @@
 package com.example.studenttracker.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.service.controls.actions.FloatAction;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
 import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.Models.Course;
 import com.example.studenttracker.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -26,6 +33,8 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     public Integer previouslySelected = -1;
     public CourseAdapter courseAdapter;
 
+    public FloatingActionButton deleteCourse;
+
 
 
     @Override
@@ -34,6 +43,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         setContentView(R.layout.activity_courses);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        deleteCourse = findViewById(R.id.deleteCourse);
 
         allCourses = new ArrayList<Course>(); //Initiating new ArrayList
         Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
@@ -71,11 +81,50 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
             return;
         }
 
-        Repository repo = new Repository(getApplication());
-        repo.deleteCourse(selectedCourse);
-        allCourses.clear();
-        allCourses.addAll(repo.getAllCourses());
-        courseAdapter.notifyItemRemoved(previouslySelected);
+        deleteCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Courses.this);
+                alertDialogBuilder.setCancelable(true);
+                alertDialogBuilder.setTitle("You are about to delete: " + selectedCourse.getTitle());
+                alertDialogBuilder.setMessage("By clicking OK, all Assessments attached to this course will also be deleted.");
+
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        Toast.makeText(Courses.this,"You have decided against your action." , Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Repository repo = new Repository(getApplication());
+                        ArrayList<Assessment> assessmentsToDelete = new ArrayList<Assessment>();
+                        assessmentsToDelete.addAll(repo.getAllAssessments());
+
+                        for (Assessment toDelete: assessmentsToDelete) {
+                            if (toDelete.getCourseID() == selectedCourse.getCourseID()) {
+                                repo.deleteAssessment(toDelete);
+                                return;
+                            }
+                        }
+
+
+                        repo.deleteCourse(selectedCourse);
+                        allCourses.clear();
+                        allCourses.addAll(repo.getAllCourses());
+                        courseAdapter.notifyItemRemoved(previouslySelected);
+
+                    }
+                });
+                alertDialogBuilder.show();
+            }
+        });
+
     }
 
     //Remove save button, use same form as AddCourse
