@@ -56,6 +56,63 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         allCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
         allCoursesRecycler.setAdapter(courseAdapter);
 
+        initDeleteCourse(); //Sets up the delete Course button.
+
+    }
+
+    private void initDeleteCourse() {
+        //Handles button click, when no assessment is selected.
+
+        deleteCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (courseAdapter.checkedPosition == -1) {
+                    Toast.makeText(Courses.this, "You must select a course.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Courses.this);
+                    alertDialogBuilder.setCancelable(true);
+                    alertDialogBuilder.setTitle("You are about to delete: " + selectedCourse.getTitle());
+                    alertDialogBuilder.setMessage("By clicking OK, all Assessments attached to this course will also be deleted.");
+
+                    alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                            Toast.makeText(Courses.this, "You have decided against your action.", Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            Repository repo = new Repository(getApplication());
+                            ArrayList<Assessment> assessmentsToDelete = new ArrayList<Assessment>();
+                            assessmentsToDelete.addAll(repo.getAllAssessments());
+
+
+                            for (Assessment toDelete : assessmentsToDelete) {
+                                if (toDelete.getCourseID() == selectedCourse.getCourseID()) {
+                                    repo.deleteAssessment(toDelete);
+                                }
+                            }
+
+                            repo.deleteCourse(selectedCourse);
+                            allCourses.clear();
+                            allCourses.addAll(repo.getAllCourses());
+                            courseAdapter.notifyItemRemoved(previouslySelected);
+                            courseAdapter.checkedPosition = -1;
+
+                        }
+                    });
+                    alertDialogBuilder.show();
+
+            }
+        });
+
     }
 
     public void addCourse(View view) {
@@ -74,58 +131,6 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         startActivity(intent);
     }
 
-    public void deleteCourse(View view) {
-        //Handles button click, when no assessment is selected.
-        if (previouslySelected == -1) {
-            Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        deleteCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Courses.this);
-                alertDialogBuilder.setCancelable(true);
-                alertDialogBuilder.setTitle("You are about to delete: " + selectedCourse.getTitle());
-                alertDialogBuilder.setMessage("By clicking OK, all Assessments attached to this course will also be deleted.");
-
-                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                        Toast.makeText(Courses.this,"You have decided against your action." , Toast.LENGTH_LONG).show();
-
-                    }
-                });
-
-                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        Repository repo = new Repository(getApplication());
-                        ArrayList<Assessment> assessmentsToDelete = new ArrayList<Assessment>();
-                        assessmentsToDelete.addAll(repo.getAllAssessments());
-
-                        for (Assessment toDelete: assessmentsToDelete) {
-                            if (toDelete.getCourseID() == selectedCourse.getCourseID()) {
-                                repo.deleteAssessment(toDelete);
-                                return;
-                            }
-                        }
-
-
-                        repo.deleteCourse(selectedCourse);
-                        allCourses.clear();
-                        allCourses.addAll(repo.getAllCourses());
-                        courseAdapter.notifyItemRemoved(previouslySelected);
-
-                    }
-                });
-                alertDialogBuilder.show();
-            }
-        });
-
-    }
 
     //Remove save button, use same form as AddCourse
     public void courseDetails(View view) {
@@ -156,7 +161,8 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
                 allCourses.get(position).getEndDate(),
                 allCourses.get(position).getStatus(),
                 allCourses.get(position).getInstructor(),
-                allCourses.get(position).getCourseNotes(), null);
+                allCourses.get(position).getCourseNotes(),
+                allCourses.get(position).getTermID());
 
     }
 }

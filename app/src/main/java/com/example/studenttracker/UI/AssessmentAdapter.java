@@ -87,6 +87,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.My
             }
         } );
 
+
         if (checkedPosition == position) {
             holder.assessmentNameText.setBackgroundColor(Color.parseColor("#FF018786"));
             mAssessmentClickListener.onAssessmentClick(holder.getAdapterPosition());
@@ -95,10 +96,6 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.My
         } else {
             holder.assessmentNameText.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
-        }
-
-        if (checkedPosition == -1) {
-            Log.println(Log.INFO,"debug", "You must select an assessment.");
         }
 
 
