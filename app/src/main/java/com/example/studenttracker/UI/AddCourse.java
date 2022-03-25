@@ -97,7 +97,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
 
     public Assessment selectedAssessment; // Used to pick courses in Recycler View
-    public Integer previouslySelected = -1; //Detects clicked location in Recycler View.
     public AssessmentAdapter assessmentAdapter; // Borrowed adapter from Assessment activity, to display data properly.
 
     @Override

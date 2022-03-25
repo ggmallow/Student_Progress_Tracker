@@ -54,7 +54,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public RecyclerView allCoursesRecycler;
 
     public Course selectedCourse; // Used to pick courses in Recycler View
-    public Integer previouslySelected = -1; //Detects clicked location in Recycler View.
     public CourseAdapter courseAdapter; // Borrowed adapter from Courses activity, to display data properly.
 
     public Bundle moddingTerm; // Transferred Term position.
@@ -66,7 +65,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public ArrayList<Course> allCoursesEnrolled = new ArrayList<>();
     public RecyclerView attachedCoursesRecycler;
     public CourseAdapter2 courseAdapter2;
-    public Integer modTermID;
+
 
 
     public ArrayList<Course> allCoursesTemp = new ArrayList<>(); // Used to keep allCourse list complete, while adding courses.
@@ -103,8 +102,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         allCoursesRecycler.setLayoutManager(courseLayout);
         allCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
         allCoursesRecycler.setAdapter(courseAdapter);
-
-
 
 
         //Setting up Courses being Taken
@@ -214,7 +211,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         }
     }
 
-
     // This is setting up the Start Date Picker.
     public void openStartDatePicker(View view) {
         datePickerDialog.show();
@@ -240,7 +236,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
         datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT, dateSetListener, year, month, day);
     }
-
 
     // This is setting up the End Date Picker.
     public void openEndDatePicker(View view) {
@@ -268,12 +263,10 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         datePickerDialog2 = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT, dateSetListener, year, month, day);
     }
 
-
     // Reused by both endDatePicker and startDatePicker
     private String makeDateString(int day,int month,int year) {
     return getMonthFormat(month) + " " + day + " " + year;
     }
-
 
     private String getMonthFormat(int month) {
         if (month == 1) {
@@ -474,34 +467,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     }
 
-    @Override
-    public void onCourseClick(int position) {
-                selectedCourse = new Course(
-                allCoursesTemp.get(position).getCourseID(),
-                allCoursesTemp.get(position).getTitle(),
-                allCoursesTemp.get(position).getStartDate(),
-                allCoursesTemp.get(position).getEndDate(),
-                allCoursesTemp.get(position).getStatus(),
-                allCoursesTemp.get(position).getInstructor(),
-                allCoursesTemp.get(position).getCourseNotes(),
-                null);
-
-    }
-
-    @Override
-    public void onCourseClick2(int position) {
-        selectedCourse = new Course(
-                allCoursesEnrolled.get(position).getCourseID(),
-                allCoursesEnrolled.get(position).getTitle(),
-                allCoursesEnrolled.get(position).getStartDate(),
-                allCoursesEnrolled.get(position).getEndDate(),
-                allCoursesEnrolled.get(position).getStatus(),
-                allCoursesEnrolled.get(position).getInstructor(),
-                allCoursesEnrolled.get(position).getCourseNotes(),
-                null);
-
-    }
-
     public void attachCourse(View view) {
         if (courseAdapter.checkedPosition == -1) {
             Log.println(Log.INFO,"debug", "You must select an assessment.");
@@ -529,4 +494,33 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         Log.println(Log.INFO,"debug", allCoursesEnrolled.toString());
 
     }
+
+    @Override
+    public void onCourseClick(int position) {
+        selectedCourse = new Course(
+                allCoursesTemp.get(position).getCourseID(),
+                allCoursesTemp.get(position).getTitle(),
+                allCoursesTemp.get(position).getStartDate(),
+                allCoursesTemp.get(position).getEndDate(),
+                allCoursesTemp.get(position).getStatus(),
+                allCoursesTemp.get(position).getInstructor(),
+                allCoursesTemp.get(position).getCourseNotes(),
+                null);
+
+    }
+
+    @Override
+    public void onCourseClick2(int position) {
+        selectedCourse = new Course(
+                allCoursesEnrolled.get(position).getCourseID(),
+                allCoursesEnrolled.get(position).getTitle(),
+                allCoursesEnrolled.get(position).getStartDate(),
+                allCoursesEnrolled.get(position).getEndDate(),
+                allCoursesEnrolled.get(position).getStatus(),
+                allCoursesEnrolled.get(position).getInstructor(),
+                allCoursesEnrolled.get(position).getCourseNotes(),
+                null);
+
+    }
+
 }
