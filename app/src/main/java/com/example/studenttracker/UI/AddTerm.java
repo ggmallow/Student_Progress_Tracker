@@ -60,12 +60,13 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public Bundle moddingTerm; // Transferred Term position.
     public Bundle termDetails; // Transferred Term position.
 
-    public int modID;
+    public Integer modID;
 
     //Setting up Courses being Taken
     public ArrayList<Course> allCoursesEnrolled = new ArrayList<>();
     public RecyclerView attachedCoursesRecycler;
     public CourseAdapter2 courseAdapter2;
+    public Integer modTermID;
 
 
     public ArrayList<Course> allCoursesTemp = new ArrayList<>(); // Used to keep allCourse list complete, while adding courses.
@@ -115,6 +116,16 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         attachedCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
         attachedCoursesRecycler.setAdapter(courseAdapter2);
 
+        //Looking for null values attached to courses.
+        ArrayList<Course> tempCourseAttachedCopy = new ArrayList<>(); // Temporary array to hold all courses with a null termID;
+        for (Course nullTerm: allCoursesTemp) {
+            if (nullTerm.getTermID() == null) {
+                tempCourseAttachedCopy.add(nullTerm);
+            }
+
+        }
+        allCoursesTemp.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
+        allCoursesTemp.addAll(tempCourseAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
 
         modTermInit();
@@ -152,6 +163,16 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                 termName.setText(modTerm.getTitle());
                 getStart.setText(modTerm.getStartDate());
                 getEnd.setText(modTerm.getEndDate());
+
+                ArrayList<Course> tempCourse = new ArrayList();
+                for (Course nullTerm: allCourses) {
+                    if (nullTerm.getTermID() == allTerms.get(passedPosition).getTermID()) {
+                        tempCourse.add(nullTerm);
+
+                    }
+                }
+                allCoursesEnrolled.clear();
+                allCoursesEnrolled.addAll(tempCourse);
             }
         } catch (Exception e) {
             //e.printStackTrace();
@@ -178,6 +199,17 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             termName.setText(modTerm.getTitle());
             getStart.setText(modTerm.getStartDate());
             getEnd.setText(modTerm.getEndDate());
+
+            ArrayList<Course> tempCourse = new ArrayList();
+            for (Course nullTerm: allCourses) {
+                if (nullTerm.getTermID() == allTerms.get(passedPosition).getTermID()) {
+                    tempCourse.add(nullTerm);
+
+                }
+            }
+            allCoursesEnrolled.clear();
+            allCoursesEnrolled.addAll(tempCourse);
+
 
         }
     }
@@ -317,6 +349,37 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             } else if (moddingTerm != null) {
                 Log.println(Log.INFO,"debug", "Mod Term logic here");
                 Repository repo = new Repository(getApplication());
+
+
+
+                for (Course attachingTerm: allCoursesEnrolled) {
+                    Course modCourse = new Course(attachingTerm.getCourseID(),
+                            attachingTerm.getTitle(),
+                            attachingTerm.getStartDate(),
+                            attachingTerm.getEndDate(),
+                            attachingTerm.getStatus(),
+                            attachingTerm.getInstructor(),
+                            attachingTerm.getCourseNotes(),
+                            modID);
+                    repo.updateCourse(modCourse);
+
+                }
+
+                for (Course detachTerm: allCoursesTemp) {
+                    Course modCourse = new Course(detachTerm.getCourseID(),
+                            detachTerm.getTitle(),
+                            detachTerm.getStartDate(),
+                            detachTerm.getEndDate(),
+                            detachTerm.getStatus(),
+                            detachTerm.getInstructor(),
+                            detachTerm.getCourseNotes(),
+                            null);
+                    repo.updateCourse(modCourse);
+
+                }
+
+
+
                 Term modTerm = new Term(
                         modID,
                         termName.getText().toString(),
