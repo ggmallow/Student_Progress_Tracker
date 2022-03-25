@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourseListener{
+public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourseListener, CourseAdapter2.OnCourseListener2{
 
     public TextView termName;
     public TextView getStart;
@@ -62,6 +62,13 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     public int modID;
 
+    //Setting up Courses being Taken
+    public ArrayList<Course> allCoursesEnrolled = new ArrayList<>();
+    public RecyclerView attachedCoursesRecycler;
+    public CourseAdapter2 courseAdapter2;
+
+
+    public ArrayList<Course> allCoursesTemp = new ArrayList<>(); // Used to keep allCourse list complete, while adding courses.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +91,31 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
         allCourses.addAll(repo.getAllCourses()); // Actually adding all courses from the allCourses database.
 
-        courseAdapter = new CourseAdapter(allCourses, this); // Change allCourses to array of courses attached.
+
+        allCoursesTemp = new ArrayList<Course>(); // Initiating temp array to hold course list.
+        allCoursesTemp.addAll(repo.getAllCourses()); // Getting all courses.
+
+
+        courseAdapter = new CourseAdapter(allCoursesTemp, this); // Change allCourses to array of courses attached.
         allCoursesRecycler = findViewById(R.id.attachedCourses);
         RecyclerView.LayoutManager courseLayout = new LinearLayoutManager(getApplicationContext());
         allCoursesRecycler.setLayoutManager(courseLayout);
         allCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
         allCoursesRecycler.setAdapter(courseAdapter);
+
+
+
+
+        //Setting up Courses being Taken
+        allCoursesEnrolled = new ArrayList<Course>(); // Initiating courses enrolled.
+        courseAdapter2 = new CourseAdapter2(allCoursesEnrolled,this);
+        attachedCoursesRecycler = findViewById(R.id.attachedCoursesRecycler);
+        RecyclerView.LayoutManager courseLayout2 = new LinearLayoutManager(getApplicationContext());
+        attachedCoursesRecycler.setLayoutManager(courseLayout2);
+        attachedCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
+        attachedCoursesRecycler.setAdapter(courseAdapter2);
+
+        
 
         modTermInit();
         termDetailsInit();
@@ -354,7 +380,57 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     @Override
     public void onCourseClick(int position) {
+                selectedCourse = new Course(
+                allCoursesTemp.get(position).getCourseID(),
+                allCoursesTemp.get(position).getTitle(),
+                allCoursesTemp.get(position).getStartDate(),
+                allCoursesTemp.get(position).getEndDate(),
+                allCoursesTemp.get(position).getStatus(),
+                allCoursesTemp.get(position).getInstructor(),
+                allCoursesTemp.get(position).getCourseNotes(),
+                null);
 
+    }
+
+    @Override
+    public void onCourseClick2(int position) {
+        selectedCourse = new Course(
+                allCoursesEnrolled.get(position).getCourseID(),
+                allCoursesEnrolled.get(position).getTitle(),
+                allCoursesEnrolled.get(position).getStartDate(),
+                allCoursesEnrolled.get(position).getEndDate(),
+                allCoursesEnrolled.get(position).getStatus(),
+                allCoursesEnrolled.get(position).getInstructor(),
+                allCoursesEnrolled.get(position).getCourseNotes(),
+                null);
+
+    }
+
+    public void attachCourse(View view) {
+        if (courseAdapter.checkedPosition == -1) {
+            Log.println(Log.INFO,"debug", "You must select an assessment.");
+        } else {
+            allCoursesEnrolled.add(selectedCourse);
+            courseAdapter2.notifyDataSetChanged();
+            allCoursesTemp.remove(courseAdapter.checkedPosition);
+            courseAdapter.notifyDataSetChanged();
+            courseAdapter.checkedPosition = -1;
+        }
+        Log.println(Log.INFO,"debug", allCoursesEnrolled.toString());
+
+    }
+
+    public void detachCourse(View view) {
+        if (courseAdapter2.checkedPosition == -1) {
+            Log.println(Log.INFO,"debug", "You must select an assessment.");
+        } else {
+            allCoursesTemp.add(selectedCourse);
+            courseAdapter.notifyDataSetChanged();
+            allCoursesEnrolled.remove(courseAdapter2.checkedPosition);
+            courseAdapter2.notifyDataSetChanged();
+            courseAdapter2.checkedPosition = -1;
+        }
+        Log.println(Log.INFO,"debug", allCoursesEnrolled.toString());
 
     }
 }

@@ -6,6 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".UI.AddTerm">
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".UI.AddTerm">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".UI.AddCourse">
+
     <EditText
         android:id="@+id/termName"
         android:layout_width="250dp"
@@ -62,7 +80,7 @@
         android:onClick="saveTerm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
     <TextView
         android:id="@+id/detailsInfo"
@@ -75,7 +93,7 @@
         android:text="You can not change details from the Term Details menu. If you need to edit an term, visit the edit menu."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
     <Button
         android:id="@+id/attachCourse"
@@ -84,10 +102,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginBottom="100dp"
         android:text=""
         app:icon="@drawable/add"
-        app:layout_constraintBottom_toTopOf="@+id/saveTerm"
+        android:onClick="attachCourse"
+        app:layout_constraintBottom_toTopOf="@+id/enrolledCourses"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
 
@@ -101,9 +120,24 @@
         android:layout_marginBottom="90dp"
         android:text=""
         app:icon="@drawable/delete"
+        android:onClick="detachCourse"
         app:layout_constraintBottom_toTopOf="@+id/saveTerm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
+
+    <TextView
+        android:id="@+id/courses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="154dp"
+        android:text="Available Courses"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endDate" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -117,6 +151,7 @@
         android:background="@drawable/border"
         app:layout_constraintTop_toBottomOf="@+id/courses">
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attachedCourses"
             android:layout_width="240dp"
@@ -128,18 +163,47 @@
         </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
 
+
     <TextView
-        android:id="@+id/courses"
+        android:id="@+id/enrolledCourses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="154dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="154dp"
-        android:text="Courses"
+        android:text="Enrolled Courses"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDate" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="250dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/border"
+        app:layout_constraintTop_toBottomOf="@+id/enrolledCourses">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/attachedCoursesRecycler"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
