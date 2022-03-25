@@ -551,22 +551,22 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 Repository repo = new Repository(getApplication());
 
                 for (Assessment attachingCourse: assessmentsAttached) {
-                    Assessment modTest = new Assessment(attachingCourse.getAssessmentID(),
+                    Assessment modAssessment = new Assessment(attachingCourse.getAssessmentID(),
                             attachingCourse.getAssessmentType(),
                             attachingCourse.getAssessmentTitle(),
                             attachingCourse.getStartDate(),
                             attachingCourse.getEndDate(),modCourseID);
-                    repo.updateAssessment(modTest);
+                    repo.updateAssessment(modAssessment);
 
                 }
 
                 for (Assessment detachingCourse: tempAssessmentsAttached) {
-                    Assessment modTest = new Assessment(detachingCourse.getAssessmentID(),
+                    Assessment modAssessment = new Assessment(detachingCourse.getAssessmentID(),
                             detachingCourse.getAssessmentType(),
                             detachingCourse.getAssessmentTitle(),
                             detachingCourse.getStartDate(),
                             detachingCourse.getEndDate(),null);
-                    repo.updateAssessment(modTest);
+                    repo.updateAssessment(modAssessment);
 
                 }
 
@@ -634,12 +634,12 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
 
                 for (Assessment attachingCourse: assessmentsAttached) {
-                    Assessment modTest = new Assessment(attachingCourse.getAssessmentID(),
+                    Assessment modAssessment = new Assessment(attachingCourse.getAssessmentID(),
                             attachingCourse.getAssessmentType(),
                             attachingCourse.getAssessmentTitle(),
                             attachingCourse.getStartDate(),
                             attachingCourse.getEndDate(),maxID);
-                    repo.updateAssessment(modTest);
+                    repo.updateAssessment(modAssessment);
 
                 }
 

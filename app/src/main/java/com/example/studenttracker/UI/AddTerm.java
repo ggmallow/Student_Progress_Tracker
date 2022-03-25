@@ -115,7 +115,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         attachedCoursesRecycler.setItemAnimator(new DefaultItemAnimator());
         attachedCoursesRecycler.setAdapter(courseAdapter2);
 
-        
+
 
         modTermInit();
         termDetailsInit();
@@ -317,8 +317,13 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             } else if (moddingTerm != null) {
                 Log.println(Log.INFO,"debug", "Mod Term logic here");
                 Repository repo = new Repository(getApplication());
-                Term modTerm = new Term(modID, termName.getText().toString(), getStart.getText().toString(), getEnd.getText().toString());
+                Term modTerm = new Term(
+                        modID,
+                        termName.getText().toString(),
+                        getStart.getText().toString(),
+                        getEnd.getText().toString());
                 repo.updateTerm(modTerm);
+
 
                 Long alertStartTime = startDate.getTime();
                 Long alertEndTime = endDate.getTime();
@@ -348,6 +353,34 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                         getStart.getText().toString(),
                         getEnd.getText().toString());
                 repo.insertTerm(newTerm);
+
+
+
+                ///We are going to associate Courses with terms here
+                ArrayList<Term> allTerms = new ArrayList<Term>();
+                allTerms.addAll(repo.getAllTerms());
+                int maxID = allTerms.get(0).getTermID();
+
+                for (int i=1; i<allTerms.size(); i++) {
+                    if (allTerms.get(i).getTermID() > maxID) {
+                        maxID = allTerms.get(i).getTermID();
+                    }
+
+                }
+                Log.println(Log.INFO,"debug", "Max ID is: " + maxID);
+
+                for (Course attachingTerm: allCoursesEnrolled) {
+                    Course modCourse = new Course(attachingTerm.getCourseID(),
+                            attachingTerm.getTitle(),
+                            attachingTerm.getStartDate(),
+                            attachingTerm.getEndDate(),
+                            attachingTerm.getStatus(),
+                            attachingTerm.getInstructor(),
+                            attachingTerm.getCourseNotes(),
+                            maxID);
+                    repo.updateCourse(modCourse);
+
+                }
 
                 Long alertStartTime = startDate.getTime();
                 Long alertEndTime = endDate.getTime();
