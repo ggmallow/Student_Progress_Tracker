@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -79,6 +80,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public Bundle moddingCourse;
     public ArrayList<Course> allCourses;
     public int modID;
+    public Integer modCourseID;
 
     //Used for detailed View
     public Bundle courseDetails;
@@ -112,6 +114,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         shareNotes.setVisibility(View.GONE); //Hiding unless coming from Course Details button.
         detailsInfo = findViewById(R.id.detailsInfo);
         detailsInfo.setVisibility(View.GONE);
+
+        courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
+
+        statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
+
+        instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
+
+        instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
+        instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
+        saveCourse = findViewById(R.id.saveCourse);
 
 
         initStartDatePicker(); // Sets up the date picker for Start Date
@@ -173,45 +185,96 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
         modCourseInit();  //Setting up for modding Course.
         courseDetailsInit(); //Setting up if navigating form Course Details button.
-
+        disableUI(); //Disabling UI if coming from Course Details button.
 
 
 
     }
+
+
+
+    private void disableUI() {
+        try {
+            courseDetails = getIntent().getExtras();
+            if (courseDetails.getInt("detailView") == 1) {
+                courseTitle.setEnabled(false);
+                getStart.setEnabled(false);
+                getEnd.setEnabled(false);
+                statusSpinner.setEnabled(false);
+                instructorSpinner.setEnabled(false);
+                instructorPhone.setEnabled(false);
+                instructorEmail.setEnabled(false);
+                attachAssessment.setEnabled(false);
+                detachAssessment.setEnabled(false);
+                courseNotes.setEnabled(false);
+                shareNotes.setVisibility(View.VISIBLE); //Hiding unless coming from Course Details button.
+                saveCourse.setVisibility(View.GONE);
+                detailsInfo.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void courseDetailsInit() {
         try {
             courseDetails = getIntent().getExtras();
             if (courseDetails.getInt("detailView") == 1) {
 
-            allCourses = new ArrayList<Course>();
 
-            courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
-            getStart = findViewById(R.id.startDate); //Setting Start Date.
-            getEnd = findViewById(R.id.endDate); //Setting End Date.
+                moddingCourse = getIntent().getExtras();
+                if (moddingCourse != null) {
+                    courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
+                    getStart = findViewById(R.id.startDate); //Setting Start Date.
+                    getEnd = findViewById(R.id.endDate); //Setting End Date.
 
-            statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
+                    statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
 
-            instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
+                    instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
 
-            instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
-            instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
-            saveCourse = findViewById(R.id.saveCourse);
+                    instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
+                    instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
 
-            //Disabling to prevent editing.
-            courseTitle.setEnabled(false);
-            getStart.setEnabled(false);
-            getEnd.setEnabled(false);
-            statusSpinner.setEnabled(false);
-            instructorSpinner.setEnabled(false);
-            instructorPhone.setEnabled(false);
-            instructorEmail.setEnabled(false);
-            attachAssessment.setEnabled(false);
-            detachAssessment.setEnabled(false);
-            courseNotes.setEnabled(false);
-            shareNotes.setVisibility(View.VISIBLE); //Hiding unless coming from Course Details button.
-            saveCourse.setVisibility(View.GONE);
-            detailsInfo.setVisibility(View.VISIBLE);
+                    allCourses = new ArrayList<Course>();
+
+                    int passedPosition = moddingCourse.getInt("courseDetails");
+
+                    Repository repo = new Repository(getApplication());
+                    allCourses.addAll(repo.getAllCourses());
+                    Course modifiedCourse = new Course(
+                            allCourses.get(passedPosition).getCourseID(),
+                            allCourses.get(passedPosition).getTitle(),
+                            allCourses.get(passedPosition).getStartDate(),
+                            allCourses.get(passedPosition).getEndDate(),
+                            allCourses.get(passedPosition).getStatus(),
+                            allCourses.get(passedPosition).getInstructor(),
+                            allCourses.get(passedPosition).getCourseNotes(), null);
+
+                    courseTitle.setText(modifiedCourse.getTitle());
+                    getStart.setText(modifiedCourse.getStartDate());
+                    getEnd.setText(modifiedCourse.getEndDate());
+                    modID = modifiedCourse.getCourseID();
+
+
+                    statusSpinner.setSelection(statusAdapter.getPosition(allCourses.get(passedPosition).getStatus()));
+                    courseNotes.setText(allCourses.get(passedPosition).getCourseNotes());
+
+
+                    //Setting up Attached Assessments box.
+                    assessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
+                    //Add loop for null foreign key on Assessments
+                    ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
+                    for (Assessment nullCourse: assessmentsAttached) {
+                        if (nullCourse.getCourseID() == allCourses.get(passedPosition).getCourseID()) {
+                            tempAssessmentsAttachedCopy.add(nullCourse);
+                        }
+
+                    }
+                    assessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
+                    assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
+
+                }
 
 
 
@@ -250,7 +313,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     allCourses.get(passedPosition).getEndDate(),
                     allCourses.get(passedPosition).getStatus(),
                     allCourses.get(passedPosition).getInstructor(),
-                    allCourses.get(passedPosition).getCourseNotes(), null);
+                    allCourses.get(passedPosition).getCourseNotes(), allCourses.get(passedPosition).getTermID());
+                    modCourseID = allCourses.get(passedPosition).getCourseID();
 
             courseTitle.setText(modifiedCourse.getTitle());
             getStart.setText(modifiedCourse.getStartDate());
@@ -482,7 +546,30 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
             else if (moddingCourse != null) {
 
+
+
                 Repository repo = new Repository(getApplication());
+
+                for (Assessment attachingCourse: assessmentsAttached) {
+                    Assessment modTest = new Assessment(attachingCourse.getAssessmentID(),
+                            attachingCourse.getAssessmentType(),
+                            attachingCourse.getAssessmentTitle(),
+                            attachingCourse.getStartDate(),
+                            attachingCourse.getEndDate(),modCourseID);
+                    repo.updateAssessment(modTest);
+
+                }
+
+                for (Assessment detachingCourse: tempAssessmentsAttached) {
+                    Assessment modTest = new Assessment(detachingCourse.getAssessmentID(),
+                            detachingCourse.getAssessmentType(),
+                            detachingCourse.getAssessmentTitle(),
+                            detachingCourse.getStartDate(),
+                            detachingCourse.getEndDate(),null);
+                    repo.updateAssessment(modTest);
+
+                }
+
                 Course modCourse = new Course(modID,
                         courseTitle.getText().toString(),
                         getStart.getText().toString(),
