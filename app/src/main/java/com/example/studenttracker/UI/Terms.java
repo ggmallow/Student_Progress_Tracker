@@ -147,7 +147,7 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         allTermsList.addAll(repo.getAllTerms());
         termAdapter.notifyItemRemoved(previouslySelected);
     }
-    
+
     public void termDetails(View view) {
         int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
 
