@@ -1,25 +1,24 @@
 package com.example.studenttracker.UI;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+
 import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
-import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.Models.Course;
 import com.example.studenttracker.Models.Term;
 import com.example.studenttracker.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -30,6 +29,7 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
     public Term selectedTerm;
     public Integer previouslySelected = -1;
     public TermAdapter termAdapter;
+    public FloatingActionButton deleteTerms;
 
 
 
@@ -45,6 +45,8 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
 
         //Setting up recyclerView
         allTermsRecycler = findViewById(R.id.allTermsRecycler);
+        deleteTerms = findViewById(R.id.deleteTerms);
+
         allTermsList = new ArrayList<Term>();
 
         Repository repo = new Repository(getApplication());
@@ -57,10 +59,64 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         allTermsRecycler.setItemAnimator(new DefaultItemAnimator());
         allTermsRecycler.setAdapter(termAdapter);
 
+        initDeleteTerm();
 
     }
 
+    private void initDeleteTerm() {
 
+        deleteTerms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (termAdapter.checkedPosition == -1) {
+                    Toast.makeText(Terms.this, "You must select a course.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Terms.this);
+                alertDialogBuilder.setCancelable(true);
+                alertDialogBuilder.setTitle("You are about to delete: " + selectedTerm.getTitle());
+                alertDialogBuilder.setMessage("By clicking OK, all Courses attached to this Term will also be deleted.");
+
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        Toast.makeText(Terms.this, "You have decided against your action.", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Repository repo = new Repository(getApplication());
+                        ArrayList<Course> coursesToDelete = new ArrayList<Course>();
+                        coursesToDelete.addAll(repo.getAllCourses());
+
+
+                        for (Course toDelete : coursesToDelete) {
+                            if (toDelete.getTermID() == selectedTerm.getTermID()) {
+                                repo.deleteCourse(toDelete);
+                            }
+                        }
+
+                        repo.deleteTerm(selectedTerm);
+                        allTermsList.clear();
+                        allTermsList.addAll(repo.getAllTerms());
+                        termAdapter.notifyItemRemoved(previouslySelected);
+                        termAdapter.checkedPosition = -1;
+
+                    }
+                });
+                alertDialogBuilder.show();
+
+            }
+        });
+
+
+    }
 
     public void addTerm(View view) {
         Intent intent = new Intent(Terms.this,AddTerm.class);
@@ -91,8 +147,7 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         allTermsList.addAll(repo.getAllTerms());
         termAdapter.notifyItemRemoved(previouslySelected);
     }
-
-    //Remove save button, use same form as AddTerm
+    
     public void termDetails(View view) {
         int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
 
