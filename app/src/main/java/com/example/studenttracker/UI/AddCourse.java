@@ -737,6 +737,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     public void onAssessmentClick(int position) {
         courseTitle.clearFocus(); //Clearing focus to fix UI skipping
+        courseNotes.clearFocus();
         selectedAssessment = new Assessment(tempAssessmentsAttached.get(position).getAssessmentID(),
                 tempAssessmentsAttached.get(position).getAssessmentType(),
                 tempAssessmentsAttached.get(position).getAssessmentTitle(),
@@ -748,6 +749,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     public void onAssessmentClick2(int position) {
         courseTitle.clearFocus(); //Clearing focus to fix UI skipping
+        courseNotes.clearFocus();
         selectedAssessment = new Assessment(assessmentsAttached.get(position).getAssessmentID(),
                 assessmentsAttached.get(position).getAssessmentType(),
                 assessmentsAttached.get(position).getAssessmentTitle(),
