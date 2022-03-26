@@ -13,6 +13,7 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -169,7 +170,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         assessmentsToCompleteRecycler.setAdapter(assessmentAdapter2);
 
         modCourseInit();  //Setting up for modding Course.
-        courseDetailsInit(); //Setting up if navigating form Course Details button.
+      //  courseDetailsInit(); //Setting up if navigating form Course Details button.
         disableUI(); //Disabling UI if coming from Course Details button.
 
 
@@ -178,6 +179,10 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     private void disableUI() {
         try {
             courseDetails = getIntent().getExtras();
+            Handler testHandler = new Handler();
+
+
+
             if (courseDetails.getInt("detailView") == 1) {
                 courseTitle.setEnabled(false);
                 getStart.setEnabled(false);
@@ -192,7 +197,15 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 shareNotes.setVisibility(View.VISIBLE); //Hiding unless coming from Course Details button.
                 saveCourse.setVisibility(View.GONE);
                 detailsInfo.setVisibility(View.VISIBLE);
+                testHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        courseDetailsInit();
+                    }
+                }, 4000);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
