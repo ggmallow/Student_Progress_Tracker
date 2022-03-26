@@ -1,6 +1,5 @@
 package com.example.studenttracker.UI;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,25 +8,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,15 +27,12 @@ import com.example.studenttracker.Models.Assessment;
 import com.example.studenttracker.Models.Course;
 import com.example.studenttracker.Models.Instructor;
 import com.example.studenttracker.R;
-import com.google.android.material.navigation.NavigationBarView;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener , AssessmentAdapter.assessmentClickListener, AssessmentAdapter2.assessmentClickListener2{
@@ -94,8 +82,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public RecyclerView assessmentsToCompleteRecycler;
     public AssessmentAdapter2 assessmentAdapter2; // Borrowed adapter from Assessment activity, to display data properly.
 
-
-
     public Assessment selectedAssessment; // Used to pick courses in Recycler View
     public AssessmentAdapter assessmentAdapter; // Borrowed adapter from Assessment activity, to display data properly.
 
@@ -125,16 +111,18 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         saveCourse = findViewById(R.id.saveCourse);
 
 
+
+        instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
+        instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
+
+
+
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
 
         //Setting up Status Spinner.
         statusAdapter = ArrayAdapter.createFromResource(this, R.array.status_options, android.R.layout.simple_spinner_dropdown_item);
-        statusSpinner = findViewById(R.id.status);
         statusSpinner.setAdapter(statusAdapter);
-
-
-
 
         //Adding instructors
         Instructor testInstructor = new Instructor("John", 1234561234, "test@wgu.edu");
@@ -180,18 +168,13 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         assessmentsToCompleteRecycler.setItemAnimator(new DefaultItemAnimator());
         assessmentsToCompleteRecycler.setAdapter(assessmentAdapter2);
 
-
-
         modCourseInit();  //Setting up for modding Course.
         courseDetailsInit(); //Setting up if navigating form Course Details button.
         disableUI(); //Disabling UI if coming from Course Details button.
 
 
-
     }
-
-
-
+    //Disables UI to prevent the user from editing fields.
     private void disableUI() {
         try {
             courseDetails = getIntent().getExtras();
@@ -215,25 +198,13 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-
     private void courseDetailsInit() {
         try {
             courseDetails = getIntent().getExtras();
             if (courseDetails.getInt("detailView") == 1) {
 
-
                 moddingCourse = getIntent().getExtras();
                 if (moddingCourse != null) {
-                    courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
-                    getStart = findViewById(R.id.startDate); //Setting Start Date.
-                    getEnd = findViewById(R.id.endDate); //Setting End Date.
-
-                    statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
-
-                    instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
-
-                    instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
-                    instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
 
                     allCourses = new ArrayList<Course>();
 
@@ -288,16 +259,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     private void modCourseInit() {
         moddingCourse = getIntent().getExtras();
         if (moddingCourse != null) {
-            courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
-            getStart = findViewById(R.id.startDate); //Setting Start Date.
-            getEnd = findViewById(R.id.endDate); //Setting End Date.
-
-            statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
-
-            instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
-
-            instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
-            instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
 
             allCourses = new ArrayList<Course>();
 
@@ -346,14 +307,12 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         instructorAdapter = new ArrayAdapter<Instructor>(this, android.R.layout.simple_spinner_item, instructorList);
 
         instructorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        instructorSpinner = findViewById(R.id.instructor);
         instructorSpinner.setAdapter(instructorAdapter);
 
         instructorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Instructor selectedInstructor = (Instructor) adapterView.getItemAtPosition(i);
-                Log.println(Log.INFO,"debug", "Data transferred: " + selectedInstructor.getName());
                 instructorPhone.setText(String.valueOf(selectedInstructor.getPhone()));
                 instructorEmail.setText(selectedInstructor.getEmail());
             }
@@ -365,16 +324,12 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
-        //Getting rest of instructor boxes
-        instructorPhone = findViewById(R.id.instructorPhone);
-        instructorEmail = findViewById(R.id.instructorEmail);
         //Disabling both fields as they can not be edited.
         instructorPhone.setEnabled(false);
         instructorEmail.setEnabled(false);
 
 
     }
-
 
     public void initStartDatePicker() {
 
@@ -477,7 +432,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-
     //Used for OnItemSelected Listener.
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -490,18 +444,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-// Need to check Dates for errors still.
     public void saveCourse(View view) throws ParseException {
-        courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
-        getStart = findViewById(R.id.startDate); //Setting Start Date.
-        getEnd = findViewById(R.id.endDate); //Setting End Date.
-
-        statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
-
-        instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
-
-        instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
-        instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
 
         try {
             if (courseTitle.getText().toString().isEmpty()) {
@@ -520,12 +463,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     Toast.makeText(this, "You must select a valid status", Toast.LENGTH_LONG).show();
                 return;
             }
-            /*
-
-            if (courseNotes.getText().toString().isEmpty()) {
-                courseNotes.setText("A note was not entered.");
-                return;
-            } */
 
             // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
             SimpleDateFormat date = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
@@ -544,8 +481,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             }
 
             else if (moddingCourse != null) {
-
-
 
                 Repository repo = new Repository(getApplication());
 
@@ -616,8 +551,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                         courseNotes.getText().toString(),null);
                 repo.insertCourse(newCourse);
 
-                //Attempting association of assessment to course.
-                //Find last created course
                 allCourses = new ArrayList<Course>();
                 allCourses.addAll(repo.getAllCourses());
                 int maxID = allCourses.get(0).getCourseID();
@@ -628,12 +561,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     }
 
                 }
-                Log.println(Log.INFO,"debug", "Max ID is: " + maxID);
-
 
                 //Update all Assessments in assessmentsAttached to hold course ID found.
-
-
                 for (Assessment attachingCourse: assessmentsAttached) {
                     Assessment modAssessment = new Assessment(attachingCourse.getAssessmentID(),
                             attachingCourse.getAssessmentType(),
@@ -643,7 +572,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     repo.updateAssessment(modAssessment);
 
                 }
-
 
 
                 Long alertStartTime = startDate.getTime();
@@ -674,7 +602,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             e.printStackTrace();
         }
 
-
     }
 
     public void shareNotes(View view) {
@@ -690,7 +617,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     public void attachAssessment(View view) {
         if (assessmentAdapter.checkedPosition == -1) {
-            Log.println(Log.INFO,"debug", "You must select an assessment.");
+            Toast.makeText(this,"You must select an assessment.",Toast.LENGTH_LONG).show();
 
         } else {
            assessmentsAttached.add(selectedAssessment);
@@ -698,7 +625,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
            tempAssessmentsAttached.remove(assessmentAdapter.checkedPosition);
            assessmentAdapter.notifyDataSetChanged();
            assessmentAdapter.checkedPosition = -1;
-           Log.println(Log.INFO,"debug", "The content of assessmentAttached is: " + selectedAssessment.getAssessmentID());
         }
 
     }
@@ -706,7 +632,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public void detachAssessment(View view) {
 
         if (assessmentAdapter2.checkedPosition == -1) {
-            Log.println(Log.INFO,"debug", "You must select an assessment.");
+            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
 
         } else {
            tempAssessmentsAttached.add(selectedAssessment);
@@ -715,23 +641,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
            assessmentAdapter2.notifyDataSetChanged();
         }
 
-
-
-        /* This finds MAX IDS and works.
-        Repository repo = new Repository(getApplication());
-        allCourses = new ArrayList<Course>();
-        allCourses.addAll(repo.getAllCourses());
-        int maxID = allCourses.get(0).getCourseID();
-
-        for (int i=1; i<allCourses.size(); i++) {
-            if (allCourses.get(i).getCourseID() > maxID) {
-                maxID = allCourses.get(i).getCourseID();
-            }
-
-        }
-        Log.println(Log.INFO,"debug", "Max ID is: " + maxID);
-
- */
     }
 
     @Override
