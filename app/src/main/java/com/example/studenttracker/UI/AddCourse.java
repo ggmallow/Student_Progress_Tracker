@@ -170,7 +170,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         assessmentsToCompleteRecycler.setAdapter(assessmentAdapter2);
 
         modCourseInit();  //Setting up for modding Course.
-      //  courseDetailsInit(); //Setting up if navigating form Course Details button.
+      //  courseDetailsInit(); //Setting up if navigating form Course Details button. Disabled as it is being ran in disableUI();
         disableUI(); //Disabling UI if coming from Course Details button.
 
 
@@ -203,7 +203,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
                         courseDetailsInit();
                     }
-                }, 4000);
+                }, 2000);
             }
 
         } catch (Exception e) {
