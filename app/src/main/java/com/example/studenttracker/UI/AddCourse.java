@@ -432,18 +432,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-    //Used for OnItemSelected Listener.
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
     public void saveCourse(View view) throws ParseException {
 
         try {
@@ -640,6 +628,18 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
            assessmentsAttached.remove(assessmentAdapter2.checkedPosition);
            assessmentAdapter2.notifyDataSetChanged();
         }
+
+    }
+
+    //Used for OnItemSelected Listener.
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 
