@@ -472,6 +472,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     }
 
     public void attachCourse(View view) {
+
         if (courseAdapter.checkedPosition == -1) {
             Log.println(Log.INFO,"debug", "You must select an assessment.");
         } else {
@@ -501,6 +502,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     @Override
     public void onCourseClick(int position) {
+        termName.clearFocus(); //Clearing focus to fix UI skipping
         selectedCourse = new Course(
                 allCoursesTemp.get(position).getCourseID(),
                 allCoursesTemp.get(position).getTitle(),
@@ -515,6 +517,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     @Override
     public void onCourseClick2(int position) {
+        termName.clearFocus(); //Clearing focus to fix UI skipping
         selectedCourse = new Course(
                 allCoursesEnrolled.get(position).getCourseID(),
                 allCoursesEnrolled.get(position).getTitle(),

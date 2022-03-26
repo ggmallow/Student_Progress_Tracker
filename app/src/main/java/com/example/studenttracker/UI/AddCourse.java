@@ -677,21 +677,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-
-    @Override
-    public void onAssessmentClick(int position) {
-        Log.println(Log.INFO,"debug", "Adapter 1: " + tempAssessmentsAttached.get(position).getAssessmentID() + " with Title: " + tempAssessmentsAttached.get(position).getAssessmentTitle());
-        selectedAssessment = new Assessment(tempAssessmentsAttached.get(position).getAssessmentID(),
-                tempAssessmentsAttached.get(position).getAssessmentType(),
-                tempAssessmentsAttached.get(position).getAssessmentTitle(),
-                tempAssessmentsAttached.get(position).getStartDate(),
-                tempAssessmentsAttached.get(position).getEndDate(),
-                null);
-        //assessmentsAttached.add(tempAssessmentsAttached.get(position));
-      //  tempAssessmentsAttached.remove(position);
-      //  Log.println(Log.INFO,"debug", "The content of assessmentAttached is: " + assessmentsAttached.get(position).getAssessmentTitle());
-    }
-
     public void shareNotes(View view) {
       String sharedNote = courseNotes.getText().toString();
       Intent sharedIntent = new Intent();
@@ -749,16 +734,25 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
  */
     }
 
+    @Override
+    public void onAssessmentClick(int position) {
+        courseTitle.clearFocus(); //Clearing focus to fix UI skipping
+        selectedAssessment = new Assessment(tempAssessmentsAttached.get(position).getAssessmentID(),
+                tempAssessmentsAttached.get(position).getAssessmentType(),
+                tempAssessmentsAttached.get(position).getAssessmentTitle(),
+                tempAssessmentsAttached.get(position).getStartDate(),
+                tempAssessmentsAttached.get(position).getEndDate(),
+                null);
+    }
 
     @Override
     public void onAssessmentClick2(int position) {
-
+        courseTitle.clearFocus(); //Clearing focus to fix UI skipping
         selectedAssessment = new Assessment(assessmentsAttached.get(position).getAssessmentID(),
                 assessmentsAttached.get(position).getAssessmentType(),
                 assessmentsAttached.get(position).getAssessmentTitle(),
                 assessmentsAttached.get(position).getStartDate(),
                 assessmentsAttached.get(position).getEndDate(),
                 null);
-        Log.println(Log.INFO,"Adapter2: ", selectedAssessment.getAssessmentTitle());
     }
 }
