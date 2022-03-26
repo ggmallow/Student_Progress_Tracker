@@ -401,7 +401,9 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
 
-                Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Modification Complete.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AddTerm.this,Terms.class);
+                startActivity(intent);
             } else {
                 Repository repo = new Repository(getApplication());
                 Term newTerm = new Term(null,
@@ -458,6 +460,8 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
                 Toast.makeText(this, "Term Saved, Check Database.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AddTerm.this,Terms.class);
+                startActivity(intent);
 
             }
         } catch (ParseException e) {

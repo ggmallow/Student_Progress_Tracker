@@ -336,12 +336,13 @@ public class AddAssessment extends AppCompatActivity {
             //Making sure Start Date is before the End Date
             if (endDate.before(startDate)) {
                 Toast.makeText(this, "Assessment End Date must be after Start Date.", Toast.LENGTH_LONG).show();
-                return;
+
             }
             //Not allowing for Start Date to be equal to End Date.
+            /* disabled as I think that a assessment should be able to end on the same day.
             if (startDate.equals(endDate)) {
                 Toast.makeText(this, "Assessment Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
-            }
+            } */
 
             else if (moddingAssessment != null) {
                 Log.println(Log.INFO,"debug", "Mod assessment logic here");
@@ -368,10 +369,12 @@ public class AddAssessment extends AppCompatActivity {
                 alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
-                Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Modification Complete.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AddAssessment.this,Assessments.class);
+                startActivity(intent);
             }else {
 
-                //Use 0 to have ID auto generated. https://developer.android.com/reference/androidx/room/PrimaryKey#autoGenerate()
+
                 Repository repo = new Repository(getApplication());
                 Assessment newAssessment = new Assessment(
                         null,
@@ -380,7 +383,10 @@ public class AddAssessment extends AppCompatActivity {
                         getStart.getText().toString(),
                         getEnd.getText().toString(),
                         null);
+
                 repo.insertAssessment(newAssessment);
+
+
 
                 Long alertStartTime = startDate.getTime();
                 Long alertEndTime = endDate.getTime();
@@ -401,8 +407,9 @@ public class AddAssessment extends AppCompatActivity {
                 alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
-                Toast.makeText(this, "Assessment Saved, Check Database.", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this, "Assessment Saved", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AddAssessment.this,Assessments.class);
+                startActivity(intent);
             }
         } catch (ParseException e) {
             e.printStackTrace();

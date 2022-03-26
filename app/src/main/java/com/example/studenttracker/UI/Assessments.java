@@ -51,6 +51,7 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
         recyclerView.setLayoutManager(layoutManger);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(assessmentAdapter);
+
         initDelete();
 
 

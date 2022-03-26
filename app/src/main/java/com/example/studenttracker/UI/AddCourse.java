@@ -600,7 +600,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
 
-                Toast.makeText(this, "Modification Complete, Check Database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Modification Complete.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AddCourse.this,Courses.class);
+                startActivity(intent);
             }else {
 
                 Repository repo = new Repository(getApplication());
@@ -664,7 +666,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
 
-                Toast.makeText(this, "Course Saved, Check Database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Course Saved.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AddCourse.this,Courses.class);
+                startActivity(intent);
             }
         } catch (ParseException e) {
             e.printStackTrace();
