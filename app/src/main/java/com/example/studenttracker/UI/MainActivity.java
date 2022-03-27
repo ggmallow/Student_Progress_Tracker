@@ -1,6 +1,7 @@
 package com.example.studenttracker.UI;
 
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -33,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.setDrawerIndicatorEnabled(true);
         navDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
 
         final NavigationView nav_View = findViewById(R.id.nav);

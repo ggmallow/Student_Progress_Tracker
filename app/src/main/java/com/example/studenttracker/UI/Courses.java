@@ -10,10 +10,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.service.controls.actions.FloatAction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
@@ -24,6 +27,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Courses extends AppCompatActivity implements CourseAdapter.OnCourseListener {
     public ArrayList<Course> allCourses = new ArrayList<>();
@@ -35,6 +42,8 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
     public FloatingActionButton deleteCourse;
 
+    public TextView courseLabel;
+
 
 
     @Override
@@ -44,12 +53,13 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         deleteCourse = findViewById(R.id.deleteCourse);
+        courseLabel = findViewById(R.id.courseLabel);
 
         allCourses = new ArrayList<Course>(); //Initiating new ArrayList
-        Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
-        allCourses.addAll(repo.getAllCourses()); // Actually adding all courses from the allCourses database.
 
-        courseAdapter = new CourseAdapter(allCourses, this);
+
+        courseAdapter = new CourseAdapter(allCourses, Courses.this);
+
         allCoursesRecycler = findViewById(R.id.allCoursesRecycler);
         RecyclerView.LayoutManager courseLayout = new LinearLayoutManager(getApplicationContext());
         allCoursesRecycler.setLayoutManager(courseLayout);
@@ -57,6 +67,48 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         allCoursesRecycler.setAdapter(courseAdapter);
 
         initDeleteCourse(); //Sets up the delete Course button.
+
+        Handler testHandler = new Handler();
+        courseLabel.setText("Loading...");
+        loadCourseData(  new LoadCourseDataCallback () {
+            @Override
+            public void onComplete(List<Course> courses) {
+                testHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        courseLabel.setText("Courses");
+                        allCourses.addAll(courses); // Actually adding all courses from the allCourses database.
+                        courseAdapter.notifyDataSetChanged();
+
+                    }
+                });
+
+
+            }
+        });
+
+    }
+
+    interface LoadCourseDataCallback {
+        void onComplete(List<Course> courses);
+    }
+
+
+    private void loadCourseData(LoadCourseDataCallback  callBack) {
+        ExecutorService executor =  Executors.newSingleThreadExecutor();
+
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
+                List<Course> test = repo.getAllCourses();
+                callBack.onComplete(test);
+
+
+            }
+        });
+
 
     }
 
