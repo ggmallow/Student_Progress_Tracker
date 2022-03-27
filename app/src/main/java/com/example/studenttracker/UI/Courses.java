@@ -37,7 +37,6 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     public RecyclerView allCoursesRecycler;
 
     public Course selectedCourse;
-  //  public Integer previouslySelected = -1;
     public CourseAdapter courseAdapter;
 
     public FloatingActionButton deleteCourse;
@@ -82,7 +81,6 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
                     }
                 });
-
 
             }
         });
@@ -202,20 +200,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
     @Override
     public void onCourseClick(int position) {
-        Log.println(Log.INFO,"debug", "You have picked: " + allCourses.get(position).getTitle());
-       // previouslySelected = position;
         selectedCourse = allCourses.get(position);
-
-        //Creates an course based off selection. Used for delete method.
-      /*  selectedCourse = new Course (
-                allCourses.get(position).getCourseID(),
-                allCourses.get(position).getTitle(),
-                allCourses.get(position).getStartDate(),
-                allCourses.get(position).getEndDate(),
-                allCourses.get(position).getStatus(),
-                allCourses.get(position).getInstructor(),
-                allCourses.get(position).getCourseNotes(),
-                allCourses.get(position).getTermID());*/
 
     }
 }
