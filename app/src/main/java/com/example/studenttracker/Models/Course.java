@@ -1,5 +1,8 @@
 package com.example.studenttracker.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -98,4 +101,6 @@ public class Course {
     public void setTermID(Integer termID) {
         this.termID = termID;
     }
+
+
 }

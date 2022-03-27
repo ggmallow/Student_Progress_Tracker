@@ -37,7 +37,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     public RecyclerView allCoursesRecycler;
 
     public Course selectedCourse;
-    public Integer previouslySelected = -1;
+  //  public Integer previouslySelected = -1;
     public CourseAdapter courseAdapter;
 
     public FloatingActionButton deleteCourse;
@@ -95,10 +95,9 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
 
     private void loadCourseData(LoadCourseDataCallback  callBack) {
-        ExecutorService executor =  Executors.newSingleThreadExecutor();
 
 
-        executor.execute(new Runnable() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
@@ -151,11 +150,12 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
                                     repo.deleteAssessment(toDelete);
                                 }
                             }
+                            int selectedCourseIndex = allCourses.indexOf(selectedCourse);
 
                             repo.deleteCourse(selectedCourse);
-                            allCourses.clear();
-                            allCourses.addAll(repo.getAllCourses());
-                            courseAdapter.notifyItemRemoved(previouslySelected);
+
+                            allCourses.remove(selectedCourse);
+                            courseAdapter.notifyItemRemoved(selectedCourseIndex);
                             courseAdapter.checkedPosition = -1;
 
                         }
@@ -174,12 +174,12 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
 
     public void editCourse(View view) {
-        if (previouslySelected == -1) {
+        if (selectedCourse == null) {
             Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = new Intent(Courses.this,AddCourse.class);
-        intent.putExtra("moddingCourse", previouslySelected);
+        intent.putExtra("courseID", selectedCourse.getCourseID());
         startActivity(intent);
     }
 
@@ -190,12 +190,12 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
 
         //Handles button click, when no assessment is selected.
-        if (previouslySelected == -1) {
+        if (selectedCourse == null) {
             Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        intent.putExtra("courseDetails", previouslySelected);
+        intent.putExtra("courseID", selectedCourse.getCourseID());
         intent.putExtra("detailView", detailView);
         startActivity(intent);
     }
@@ -203,10 +203,11 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     @Override
     public void onCourseClick(int position) {
         Log.println(Log.INFO,"debug", "You have picked: " + allCourses.get(position).getTitle());
-        previouslySelected = position;
+       // previouslySelected = position;
+        selectedCourse = allCourses.get(position);
 
         //Creates an course based off selection. Used for delete method.
-        selectedCourse = new Course (
+      /*  selectedCourse = new Course (
                 allCourses.get(position).getCourseID(),
                 allCourses.get(position).getTitle(),
                 allCourses.get(position).getStartDate(),
@@ -214,7 +215,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
                 allCourses.get(position).getStatus(),
                 allCourses.get(position).getInstructor(),
                 allCourses.get(position).getCourseNotes(),
-                allCourses.get(position).getTermID());
+                allCourses.get(position).getTermID());*/
 
     }
 }

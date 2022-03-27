@@ -23,6 +23,9 @@ public class Repository {
     private List<Term> mAllTerms;
     private List<Course> mAllCourses;
     public List<Assessment> mAllAssessments;
+    public List<Assessment> mAvailableAssessments;
+    public Course testCourse;
+
 
     private static int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -137,6 +140,20 @@ public class Repository {
         return mAllAssessments;
     }
 
+    public List<Assessment>getAvailableAssessments() {
+        databaseExecutor.execute(()->{
+            mAvailableAssessments = mAssessmentDAO.getAvailableAssessments();
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mAvailableAssessments;
+    }
+
+
+
 //This section of code will be for Courses.
 
 //This inserts a Course into the database.
@@ -186,6 +203,19 @@ public void insertCourse(Course course){
             e.printStackTrace();
         }
         return mAllCourses;
+    }
+
+    public Course getCourseByID(Integer courseID) {
+
+        databaseExecutor.execute(()->{
+            testCourse = mCourseDAO.getCourseByID(courseID);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return testCourse;
     }
 
 }

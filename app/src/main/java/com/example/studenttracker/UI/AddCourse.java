@@ -34,7 +34,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSelectedListener , AssessmentAdapter.assessmentClickListener, AssessmentAdapter2.assessmentClickListener2{
 
@@ -66,18 +68,17 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public Button shareNotes;
 
     //Used for modding course
-    public Bundle moddingCourse;
+    //public Bundle moddingCourse;
     public ArrayList<Course> allCourses;
     public int modID;
     public Integer modCourseID;
 
     //Used for detailed View
-    public Bundle courseDetails;
 
     //Setting up for selecting Assessments.
-    public ArrayList<Assessment> allAssessments = new ArrayList<>();
+    public ArrayList<Assessment> availableAssessments = new ArrayList<>();
     public ArrayList<Assessment> assessmentsAttached = new ArrayList<>();
-    public ArrayList<Assessment> tempAssessmentsAttached = new ArrayList<>();
+    //public ArrayList<Assessment> tempAssessmentsAttached = new ArrayList<>();
     public RecyclerView allAssessmentsRecycler;
 
     public RecyclerView assessmentsToCompleteRecycler;
@@ -100,22 +101,14 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         shareNotes.setVisibility(View.GONE); //Hiding unless coming from Course Details button.
         detailsInfo = findViewById(R.id.detailsInfo);
         detailsInfo.setVisibility(View.GONE);
-
         courseTitle = findViewById(R.id.courseTitle); //Setting Course Title.
-
         statusSpinner = findViewById(R.id.status); //Setting up Spinner for Status.
-
         instructorSpinner = findViewById(R.id.instructor); //Setting up Spinner for Instructors.
-
         instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
         instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
         saveCourse = findViewById(R.id.saveCourse);
-
-
-
         instructorPhone = findViewById(R.id.instructorPhone); //Setting up Instructor Phone TextView.
         instructorEmail = findViewById(R.id.instructorEmail); //Setting up Instructor Email TextView.
-
 
 
         initStartDatePicker(); // Sets up the date picker for Start Date
@@ -132,28 +125,9 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         instructorList.add(testInstructor2);
         initInstructorPicker(); //Loads menu with instructors.
 
+        availableAssessments = new ArrayList<Assessment>(); //Initiating new ArrayList
 
-        //Setting up for selecting Assessments.
-        allAssessments = new ArrayList<Assessment>(); //Initiating new ArrayList
-        tempAssessmentsAttached = new ArrayList<>();
-        Repository repo = new Repository(getApplication()); //Creating new Repository to get Assessments.
-        allAssessments.addAll(repo.getAllAssessments()); // Actually adding all assessments from the allAssessments database. Probably not needed anymore.
-
-
-        tempAssessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
-        //Add loop for null foreign key on Assessments
-        ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
-        for (Assessment nullCourse: tempAssessmentsAttached) {
-            if (nullCourse.getCourseID() == null) {
-                tempAssessmentsAttachedCopy.add(nullCourse);
-            }
-
-        }
-        tempAssessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
-        tempAssessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
-
-
-        assessmentAdapter = new AssessmentAdapter(tempAssessmentsAttached, this); // Change allAssessments to array of courses attached.
+        assessmentAdapter = new AssessmentAdapter(availableAssessments, this); // Change allAssessments to array of courses attached.
         allAssessmentsRecycler = findViewById(R.id.attachedAssessments);
         RecyclerView.LayoutManager assessmentLayout = new LinearLayoutManager(getApplicationContext());
         allAssessmentsRecycler.setLayoutManager(assessmentLayout);
@@ -169,21 +143,58 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         assessmentsToCompleteRecycler.setItemAnimator(new DefaultItemAnimator());
         assessmentsToCompleteRecycler.setAdapter(assessmentAdapter2);
 
-        modCourseInit();  //Setting up for modding Course.
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().getInt("detailView") == 1) {
+                disableUI(); //Disabling UI if coming from Course Details button.
+            }
+            if (getIntent().getExtras().getInt("courseID") > 0) {
+                courseDetailsInit(); //Setting up if navigating form Course Details button. Disabled as it is being ran in disableUI();
+            }
+        }
       //  courseDetailsInit(); //Setting up if navigating form Course Details button. Disabled as it is being ran in disableUI();
-        disableUI(); //Disabling UI if coming from Course Details button.
+
+
+
+        Handler testHandler = new Handler();
+        getAvailableAssessments(new GetAllAssessmentsCallback() {
+            @Override
+            public void onComplete(List<Assessment> assessments) {
+                testHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        availableAssessments.addAll(assessments);
+                        assessmentAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
+        });
 
 
     }
+
+    interface GetAllAssessmentsCallback {
+        void onComplete(List<Assessment> assessments);
+    }
+
+    private void getAvailableAssessments(GetAllAssessmentsCallback callback) {
+
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
+                List<Assessment> assessments = repo.getAvailableAssessments();
+                callback.onComplete(assessments);
+
+
+            }
+        });
+
+    }
+
     //Disables UI to prevent the user from editing fields.
     private void disableUI() {
-        try {
-            courseDetails = getIntent().getExtras();
-            Handler testHandler = new Handler();
 
-
-
-            if (courseDetails.getInt("detailView") == 1) {
                 courseTitle.setEnabled(false);
                 getStart.setEnabled(false);
                 getEnd.setEnabled(false);
@@ -197,97 +208,65 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 shareNotes.setVisibility(View.VISIBLE); //Hiding unless coming from Course Details button.
                 saveCourse.setVisibility(View.GONE);
                 detailsInfo.setVisibility(View.VISIBLE);
-                testHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
 
-                        courseDetailsInit();
-                    }
-                }, 2000);
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void courseDetailsInit() {
         try {
-            courseDetails = getIntent().getExtras();
-            if (courseDetails.getInt("detailView") == 1) {
 
-                moddingCourse = getIntent().getExtras();
-                if (moddingCourse != null) {
-
-                    allCourses = new ArrayList<Course>();
-
-                    int passedPosition = moddingCourse.getInt("courseDetails");
-
-                    Repository repo = new Repository(getApplication());
-                    allCourses.addAll(repo.getAllCourses());
-                    Course modifiedCourse = new Course(
-                            allCourses.get(passedPosition).getCourseID(),
-                            allCourses.get(passedPosition).getTitle(),
-                            allCourses.get(passedPosition).getStartDate(),
-                            allCourses.get(passedPosition).getEndDate(),
-                            allCourses.get(passedPosition).getStatus(),
-                            allCourses.get(passedPosition).getInstructor(),
-                            allCourses.get(passedPosition).getCourseNotes(), null);
-
-                    courseTitle.setText(modifiedCourse.getTitle());
-                    getStart.setText(modifiedCourse.getStartDate());
-                    getEnd.setText(modifiedCourse.getEndDate());
-                    modID = modifiedCourse.getCourseID();
+                Integer courseID = getIntent().getExtras().getInt("courseID");
 
 
-                    statusSpinner.setSelection(statusAdapter.getPosition(allCourses.get(passedPosition).getStatus()));
-                    courseNotes.setText(allCourses.get(passedPosition).getCourseNotes());
+                Repository repo = new Repository(getApplication());
+
+                Course modifiedCourse = repo.getCourseByID(courseID);
 
 
-                    //Setting up Attached Assessments box.
-                    assessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
-                    //Add loop for null foreign key on Assessments
-                    ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
-                    for (Assessment nullCourse: assessmentsAttached) {
-                        if (nullCourse.getCourseID() == allCourses.get(passedPosition).getCourseID()) {
-                            tempAssessmentsAttachedCopy.add(nullCourse);
-                        }
+                courseTitle.setText(modifiedCourse.getTitle());
+                getStart.setText(modifiedCourse.getStartDate());
+                getEnd.setText(modifiedCourse.getEndDate());
+                modID = modifiedCourse.getCourseID();
 
+
+                statusSpinner.setSelection(statusAdapter.getPosition(modifiedCourse.getStatus()));
+                courseNotes.setText(modifiedCourse.getCourseNotes());
+
+
+                //Setting up Attached Assessments box.
+                assessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
+                //Add loop for null foreign key on Assessments
+                ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
+                for (Assessment nullCourse: assessmentsAttached) {
+                    if (nullCourse.getCourseID() == modifiedCourse.getCourseID()) {
+                        tempAssessmentsAttachedCopy.add(nullCourse);
                     }
-                    assessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
-                    assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
                 }
+                assessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
+                assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
 
 
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
+/*
     //Method to set up fields if coming from the Course edit button.
     private void modCourseInit() {
-        moddingCourse = getIntent().getExtras();
-        if (moddingCourse != null) {
+
+        if (getIntent().getExtras() != null) {
 
             allCourses = new ArrayList<Course>();
 
-            int passedPosition = moddingCourse.getInt("moddingCourse");
+            Integer courseID = getIntent().getExtras().getInt("courseDetails");
 
             Repository repo = new Repository(getApplication());
-            allCourses.addAll(repo.getAllCourses());
-            Course modifiedCourse = new Course(
-                    allCourses.get(passedPosition).getCourseID(),
-                    allCourses.get(passedPosition).getTitle(),
-                    allCourses.get(passedPosition).getStartDate(),
-                    allCourses.get(passedPosition).getEndDate(),
-                    allCourses.get(passedPosition).getStatus(),
-                    allCourses.get(passedPosition).getInstructor(),
-                    allCourses.get(passedPosition).getCourseNotes(), allCourses.get(passedPosition).getTermID());
-                    modCourseID = allCourses.get(passedPosition).getCourseID();
+            Course modifiedCourse = repo.getCourseByID(courseID);
+
 
             courseTitle.setText(modifiedCourse.getTitle());
             getStart.setText(modifiedCourse.getStartDate());
@@ -295,8 +274,8 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             modID = modifiedCourse.getCourseID();
 
 
-            statusSpinner.setSelection(statusAdapter.getPosition(allCourses.get(passedPosition).getStatus()));
-            courseNotes.setText(allCourses.get(passedPosition).getCourseNotes());
+            statusSpinner.setSelection(statusAdapter.getPosition(modifiedCourse.getStatus()));
+            courseNotes.setText(modifiedCourse.getCourseNotes());
 
 
             //Setting up Attached Assessments box.
@@ -304,7 +283,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             //Add loop for null foreign key on Assessments
             ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
             for (Assessment nullCourse: assessmentsAttached) {
-                if (nullCourse.getCourseID() == allCourses.get(passedPosition).getCourseID()) {
+                if (nullCourse.getCourseID() == modifiedCourse.getCourseID()) {
                     tempAssessmentsAttachedCopy.add(nullCourse);
                 }
 
@@ -314,7 +293,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
         }
     }
-
+*/
     private void initInstructorPicker() {
         //Setting up instructor box.
         instructorAdapter = new ArrayAdapter<Instructor>(this, android.R.layout.simple_spinner_item, instructorList);
@@ -481,7 +460,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
             }
 
-            else if (moddingCourse != null) {
+            else if (getIntent().getExtras() != null) {
 
                 Repository repo = new Repository(getApplication());
 
@@ -495,7 +474,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
                 }
 
-                for (Assessment detachingCourse: tempAssessmentsAttached) {
+               /* for (Assessment detachingCourse: tempAssessmentsAttached) {
                     Assessment modAssessment = new Assessment(detachingCourse.getAssessmentID(),
                             detachingCourse.getAssessmentType(),
                             detachingCourse.getAssessmentTitle(),
@@ -503,7 +482,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                             detachingCourse.getEndDate(),null);
                     repo.updateAssessment(modAssessment);
 
-                }
+                }*/
 
                 Course modCourse = new Course(modID,
                         courseTitle.getText().toString(),
@@ -623,7 +602,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         } else {
            assessmentsAttached.add(selectedAssessment);
            assessmentAdapter2.notifyDataSetChanged();
-           tempAssessmentsAttached.remove(assessmentAdapter.checkedPosition);
+        //   tempAssessmentsAttached.remove(assessmentAdapter.checkedPosition);
            assessmentAdapter.notifyDataSetChanged();
            assessmentAdapter.checkedPosition = -1;
         }
@@ -636,7 +615,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
 
         } else {
-           tempAssessmentsAttached.add(selectedAssessment);
+         //  tempAssessmentsAttached.add(selectedAssessment);
            assessmentAdapter.notifyDataSetChanged();
            assessmentsAttached.remove(assessmentAdapter2.checkedPosition);
            assessmentAdapter2.notifyDataSetChanged();
@@ -647,7 +626,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     //Used for OnItemSelected Listener.
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
 
     }
 
@@ -660,11 +638,11 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public void onAssessmentClick(int position) {
         courseTitle.clearFocus(); //Clearing focus to fix UI skipping
         courseNotes.clearFocus();
-        selectedAssessment = new Assessment(tempAssessmentsAttached.get(position).getAssessmentID(),
-                tempAssessmentsAttached.get(position).getAssessmentType(),
-                tempAssessmentsAttached.get(position).getAssessmentTitle(),
-                tempAssessmentsAttached.get(position).getStartDate(),
-                tempAssessmentsAttached.get(position).getEndDate(),
+        selectedAssessment = new Assessment(availableAssessments.get(position).getAssessmentID(),
+                availableAssessments.get(position).getAssessmentType(),
+                availableAssessments.get(position).getAssessmentTitle(),
+                availableAssessments.get(position).getStartDate(),
+                availableAssessments.get(position).getEndDate(),
                 null);
     }
 
