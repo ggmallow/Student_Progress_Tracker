@@ -557,9 +557,10 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         } else {
            assessmentsAttached.add(selectedAssessment);
            assessmentAdapter2.notifyDataSetChanged();
-        //   tempAssessmentsAttached.remove(assessmentAdapter.checkedPosition);
+           availableAssessments.remove(selectedAssessment);
            assessmentAdapter.notifyDataSetChanged();
            assessmentAdapter.checkedPosition = -1;
+
         }
 
     }
@@ -570,10 +571,11 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
 
         } else {
-         //  tempAssessmentsAttached.add(selectedAssessment);
+            availableAssessments.add(selectedAssessment);
            assessmentAdapter.notifyDataSetChanged();
-           assessmentsAttached.remove(assessmentAdapter2.checkedPosition);
+           assessmentsAttached.remove(selectedAssessment);
            assessmentAdapter2.notifyDataSetChanged();
+           assessmentAdapter2.checkedPosition = -1;
         }
 
     }
@@ -593,23 +595,15 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public void onAssessmentClick(int position) {
         courseTitle.clearFocus(); //Clearing focus to fix UI skipping
         courseNotes.clearFocus();
-        selectedAssessment = new Assessment(availableAssessments.get(position).getAssessmentID(),
-                availableAssessments.get(position).getAssessmentType(),
-                availableAssessments.get(position).getAssessmentTitle(),
-                availableAssessments.get(position).getStartDate(),
-                availableAssessments.get(position).getEndDate(),
-                null);
+        selectedAssessment = availableAssessments.get(position);
+
     }
 
     @Override
     public void onAssessmentClick2(int position) {
         courseTitle.clearFocus(); //Clearing focus to fix UI skipping
         courseNotes.clearFocus();
-        selectedAssessment = new Assessment(assessmentsAttached.get(position).getAssessmentID(),
-                assessmentsAttached.get(position).getAssessmentType(),
-                assessmentsAttached.get(position).getAssessmentTitle(),
-                assessmentsAttached.get(position).getStartDate(),
-                assessmentsAttached.get(position).getEndDate(),
-                null);
+        selectedAssessment = assessmentsAttached.get(position);
+
     }
 }
