@@ -150,11 +150,11 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
             }
         }
 
-        Handler testHandler = new Handler();
+        Handler handler = new Handler();
         getAvailableAssessments(new GetAllAssessmentsCallback() {
             @Override
             public void onComplete(List<Assessment> assessments) {
-                testHandler.post(new Runnable() {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         availableAssessments.addAll(assessments);
@@ -203,7 +203,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 shareNotes.setVisibility(View.VISIBLE); //Hiding unless coming from Course Details button.
                 saveCourse.setVisibility(View.GONE);
                 detailsInfo.setVisibility(View.VISIBLE);
-
 
     }
 

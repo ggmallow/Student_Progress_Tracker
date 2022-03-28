@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.studenttracker.Models.Assessment;
+import com.example.studenttracker.Models.Course;
 import com.example.studenttracker.Models.Term;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface AssessmentDAO {
     @Query("SELECT * FROM assessments WHERE courseID IS null")
     List<Assessment> getAvailableAssessments();
 
+    @Query("SELECT * FROM assessments WHERE assessmentID = :assessmentID")
+    Assessment getAssessmentByID(Integer assessmentID);
 }

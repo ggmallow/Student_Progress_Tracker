@@ -24,7 +24,8 @@ public class Repository {
     private List<Course> mAllCourses;
     public List<Assessment> mAllAssessments;
     public List<Assessment> mAvailableAssessments;
-    public Course testCourse;
+    public Course courseByID;
+    public Assessment assessmentByID;
 
 
     private static int NUMBER_OF_THREADS = 6;
@@ -140,6 +141,7 @@ public class Repository {
         return mAllAssessments;
     }
 
+    //This will get all Assessments that arent assigned to a course.
     public List<Assessment>getAvailableAssessments() {
         databaseExecutor.execute(()->{
             mAvailableAssessments = mAssessmentDAO.getAvailableAssessments();
@@ -150,6 +152,20 @@ public class Repository {
             e.printStackTrace();
         }
         return mAvailableAssessments;
+    }
+
+    //This will get a Assessment by ID
+    public Assessment getAssessmentByID(Integer assessmentID) {
+
+        databaseExecutor.execute(()->{
+            assessmentByID = mAssessmentDAO.getAssessmentByID(assessmentID);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return assessmentByID;
     }
 
 
@@ -205,17 +221,18 @@ public void insertCourse(Course course){
         return mAllCourses;
     }
 
+    //This will get a course by ID.
     public Course getCourseByID(Integer courseID) {
 
         databaseExecutor.execute(()->{
-            testCourse = mCourseDAO.getCourseByID(courseID);
+            courseByID = mCourseDAO.getCourseByID(courseID);
         });
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return testCourse;
+        return courseByID;
     }
 
 }

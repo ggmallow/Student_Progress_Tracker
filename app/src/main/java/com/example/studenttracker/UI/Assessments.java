@@ -161,13 +161,13 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
     public void editAssessment(View view) {
 
-        if (previouslySelected == -1) {
+        if (selectedAssessment == null) {
             Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
             return;
         }
 
         Intent intent = new Intent(Assessments.this,AddAssessment.class);
-        intent.putExtra("moddingAssessment", previouslySelected);
+        intent.putExtra("assessmentID", selectedAssessment.getAssessmentID());
         startActivity(intent);
     }
 
@@ -178,12 +178,12 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
         int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
 
         //Handles button click, when no assessment is selected.
-        if (previouslySelected == -1) {
+        if (selectedAssessment == null) {
             Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        intent.putExtra("assessmentDetails", previouslySelected);
+        intent.putExtra("assessmentID", selectedAssessment.getAssessmentID());
         intent.putExtra("detailView", detailView);
         startActivity(intent);
 
@@ -192,17 +192,9 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
     @Override
     public void onAssessmentClick(int position) {
 
-        Log.println(Log.INFO,"debug", "You have picked: " + allAssessments.get(position).getAssessmentTitle());
-        previouslySelected = position;
+        selectedAssessment = allAssessments.get(position);
 
-        //Creates an assessment based off selection. Used for delete method.
-            selectedAssessment = new Assessment(
-                    Integer.parseInt(String.valueOf(allAssessments.get(position).getAssessmentID())),
-                    allAssessments.get(position).getAssessmentType(),
-                    allAssessments.get(position).getAssessmentTitle(),
-                    allAssessments.get(position).getStartDate(),
-                    allAssessments.get(position).getEndDate(),
-                    allAssessments.get(position).getCourseID());
+
 
     }
 

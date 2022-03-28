@@ -66,126 +66,66 @@ public class AddAssessment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_assessment);
 
+
+        assessmentType = findViewById(R.id.assessmentType);
+        performance = findViewById(R.id.performance);
+        objective = findViewById(R.id.objective);
+        assessmentTitle = findViewById(R.id.assessmentTitle);
         getStart = findViewById(R.id.startDate);
         getEnd = findViewById(R.id.endDate);
+        saveAssessment = findViewById(R.id.saveAssessment);
         detailsInfo = findViewById(R.id.detailsInfo);
         detailsInfo.setVisibility(View.GONE);
+
+
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
 
 
-        modAssessmentInit(); //Setting up for Modding an Assessment.
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().getInt("detailView") == 1) {
+                disableUI();
+            }
 
-        assessmentDetailsInit(); //Setting up for Assessment Detail View.
-
-
-
-
+        if (getIntent().getExtras().getInt("assessmentID") > 0) {
+            assessmentDetailsInit(); //Setting up for Modding an Assessment.
+        }
+    }
 
     }
+
+    private void disableUI() {
+        assessmentType.setEnabled(false);
+        performance.setEnabled(false);
+        objective.setEnabled(false);
+        assessmentTitle.setEnabled(false);
+        getStart.setEnabled(false);
+        getEnd.setEnabled(false);
+        saveAssessment.setVisibility(View.GONE);
+        detailsInfo.setVisibility(View.VISIBLE);
+    }
+
     //Method that provides all data to the form, if navigating from details button. It also disables the fields and hides the save button.
     private void assessmentDetailsInit() {
 
-        try {
-            assessmentDetails = getIntent().getExtras();
-            if (assessmentDetails.getInt("detailView") == 1) {
-                int passedPosition = assessmentDetails.getInt("assessmentDetails");
+        Repository repo = new Repository(getApplication());
+        int assessmentID = getIntent().getExtras().getInt("assessmentID");
 
-                allAssessments = new ArrayList<Assessment>();
+        Assessment modifiedAssessment = repo.getAssessmentByID(assessmentID);
 
-                assessmentType = findViewById(R.id.assessmentType);
-                performance = findViewById(R.id.performance);
-                objective = findViewById(R.id.objective);
-                assessmentTitle = findViewById(R.id.assessmentTitle);
-                getStart = findViewById(R.id.startDate);
-                getEnd = findViewById(R.id.endDate);
-                saveAssessment = findViewById(R.id.saveAssessment);
+        modID = modifiedAssessment.getAssessmentID();
 
-
-
-                //Disabling fields, so they can not be edited.
-                assessmentType.setEnabled(false);
-                performance.setEnabled(false);
-                objective.setEnabled(false);
-                assessmentTitle.setEnabled(false);
-                getStart.setEnabled(false);
-                getEnd.setEnabled(false);
-                saveAssessment.setVisibility(View.GONE);
-                detailsInfo.setVisibility(View.VISIBLE);
-
-
-
-
-                Repository repo = new Repository(getApplication());
-                allAssessments.addAll(repo.getAllAssessments());
-                allAssessments.get(passedPosition);
-                Assessment assessmentDetails = new Assessment(
-                        allAssessments.get(passedPosition).getAssessmentID(),
-                        allAssessments.get(passedPosition).getAssessmentType(),
-                        allAssessments.get(passedPosition).getAssessmentTitle(),
-                        allAssessments.get(passedPosition).getStartDate(),
-                        allAssessments.get(passedPosition).getEndDate(), null);
-
-                //Populating form data
-                if (assessmentDetails.getAssessmentType().equals("Performance")) {
-                    performance.setChecked(true);
-                } else {
-                    objective.setChecked(true);
-                }
-                assessmentTitle.setText(assessmentDetails.getAssessmentTitle());
-                getStart.setText(assessmentDetails.getStartDate());
-                getEnd.setText(assessmentDetails.getEndDate());
-            }
-        } catch (Exception e) {
-          //  e.printStackTrace(); Used during debugging, handling problem below.
-            Log.println(Log.INFO,"debug", "Null pointer has occurred.");
+        if (modifiedAssessment.getAssessmentType().equals("Performance")) {
+            performance.setChecked(true);
+        } else {
+            objective.setChecked(true);
         }
-
+        assessmentTitle.setText(modifiedAssessment.getAssessmentTitle());
+        getStart.setText(modifiedAssessment.getStartDate());
+        getEnd.setText(modifiedAssessment.getEndDate());
 
     }
 
-    //Method that provides all data to the form, if navigating from edit button.
-    private void modAssessmentInit() {
-        moddingAssessment = getIntent().getExtras();
-        if (moddingAssessment != null) {
-            int passedPosition = moddingAssessment.getInt("moddingAssessment");
-            Log.println(Log.INFO,"debug", "Data transferred: " + passedPosition);
-            Log.println(Log.INFO,"debug", "moddingAssessment: " + moddingAssessment);
-
-
-            allAssessments = new ArrayList<Assessment>();
-
-            assessmentType = findViewById(R.id.assessmentType);
-            performance = findViewById(R.id.performance);
-            objective = findViewById(R.id.objective);
-            assessmentTitle = findViewById(R.id.assessmentTitle);
-            getStart = findViewById(R.id.startDate);
-            getEnd = findViewById(R.id.endDate);
-
-
-            Repository repo = new Repository(getApplication());
-            allAssessments.addAll(repo.getAllAssessments());
-            allAssessments.get(passedPosition);
-            Assessment modAssessment = new Assessment(
-                    allAssessments.get(passedPosition).getAssessmentID(),
-                    allAssessments.get(passedPosition).getAssessmentType(),
-                    allAssessments.get(passedPosition).getAssessmentTitle(),
-                    allAssessments.get(passedPosition).getStartDate(),
-                    allAssessments.get(passedPosition).getEndDate(), null);
-            modID = modAssessment.getAssessmentID();
-
-            if (modAssessment.getAssessmentType().equals("Performance")) {
-                performance.setChecked(true);
-            } else {
-                objective.setChecked(true);
-            }
-            assessmentTitle.setText(modAssessment.getAssessmentTitle());
-            getStart.setText(modAssessment.getStartDate());
-            getEnd.setText(modAssessment.getEndDate());
-
-        }
-
-    }
 
     // This is setting up the Start Date Picker.
     public void openStartDatePicker(View view) {
@@ -204,7 +144,6 @@ public class AddAssessment extends AppCompatActivity {
                 String makeDateString = makeDateString(day, month, year);
                 getStart.setText(makeDateString);
 
-
             }
         };
 
@@ -215,7 +154,6 @@ public class AddAssessment extends AppCompatActivity {
 
         datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT, dateSetListener, year, month, day);
     }
-
 
     // This is setting up the End Date Picker.
     public void openEndDatePicker(View view) {
