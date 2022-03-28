@@ -43,7 +43,7 @@ public class AddAssessment extends AppCompatActivity {
     public DatePickerDialog datePickerDialog2;
 
 
-//IDs for form
+    //IDs for form
     public RadioGroup assessmentType;
     public String tempAssessmentType;
     public RadioButton objective; //Setting assessmentType
@@ -60,7 +60,6 @@ public class AddAssessment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_assessment);
 
-
         assessmentType = findViewById(R.id.assessmentType);
         performance = findViewById(R.id.performance);
         objective = findViewById(R.id.objective);
@@ -71,10 +70,8 @@ public class AddAssessment extends AppCompatActivity {
         detailsInfo = findViewById(R.id.detailsInfo);
         detailsInfo.setVisibility(View.GONE);
 
-
         initStartDatePicker(); // Sets up the date picker for Start Date
         initEndDatePicker(); //Sets up the date picker for End Date.
-
 
         if (getIntent().getExtras() != null) {
             if (getIntent().getExtras().getInt("detailView") == 1) {
@@ -104,9 +101,7 @@ public class AddAssessment extends AppCompatActivity {
 
         Repository repo = new Repository(getApplication());
         int assessmentID = getIntent().getExtras().getInt("assessmentID");
-
         Assessment modifiedAssessment = repo.getAssessmentByID(assessmentID);
-
 
         if (modifiedAssessment.getAssessmentType().equals("Performance")) {
             performance.setChecked(true);
@@ -223,12 +218,6 @@ public class AddAssessment extends AppCompatActivity {
     }
 
     public void saveAssessment(View view) throws ParseException {
-        assessmentType = findViewById(R.id.assessmentType);
-        performance = findViewById(R.id.performance);
-        objective = findViewById(R.id.objective);
-        assessmentTitle = findViewById(R.id.assessmentTitle);
-        getStart = findViewById(R.id.startDate);
-        getEnd = findViewById(R.id.endDate);
 
         try {
             if (assessmentType.getCheckedRadioButtonId() == -1) {
