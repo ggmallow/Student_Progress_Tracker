@@ -35,7 +35,6 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
     public TermAdapter termAdapter;
     public FloatingActionButton deleteTerms;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -83,7 +82,6 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
 
     private void loadTermData(LoadTermData callBack) {
 
-
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -99,15 +97,15 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         deleteTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (termAdapter.checkedPosition == -1) {
-                    Toast.makeText(Terms.this, "You must select a term.", Toast.LENGTH_LONG).show();
+                if (selectedTerm == null) {
+                    Toast.makeText(Terms.this, "You must select a Term.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Terms.this);
                 alertDialogBuilder.setCancelable(true);
                 alertDialogBuilder.setTitle("You are about to delete: " + selectedTerm.getTitle());
-                alertDialogBuilder.setMessage("By clicking OK, all Courses attached to this Term will also be deleted.");
+                alertDialogBuilder.setMessage("By clicking OK, this term will be deleted. If a term has a Course assigned, you can not delete it.");
 
                 alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -123,21 +121,25 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         Repository repo = new Repository(getApplication());
+
+
                         ArrayList<Course> coursesToDelete = new ArrayList<Course>();
                         coursesToDelete.addAll(repo.getAllCourses());
 
 
-                        for (Course toDelete : coursesToDelete) {
-                            if (toDelete.getTermID() == selectedTerm.getTermID()) {
-                                repo.deleteCourse(toDelete);
+                       for (Course doNotDelete : coursesToDelete) {
+                            if (doNotDelete.getTermID() == selectedTerm.getTermID()) {
+                                Toast.makeText(Terms.this, "You can not delete a Term that has Courses assigned.", Toast.LENGTH_LONG).show();
+                                return;
                             }
                         }
+
                         int selectedTermIndex = allTermsList.indexOf(selectedTerm);
 
                         repo.deleteTerm(selectedTerm);
                         allTermsList.remove(selectedTerm);
                         termAdapter.notifyItemRemoved(selectedTermIndex);
-                        termAdapter.checkedPosition = -1;
+                        selectedTerm = null;
 
                     }
                 });
@@ -165,23 +167,12 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         startActivity(intent);
     }
 
-   /* public void deleteTerms(View view) {
-        //Handles button click, when no assessment is selected.
+    public void termDetails(View view) {
+        int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
         if (selectedTerm == null) {
             Toast.makeText(this, "You must select a Term.", Toast.LENGTH_LONG).show();
             return;
         }
-
-        Repository repo = new Repository(getApplication());
-        repo.deleteTerm(selectedTerm);
-        allTermsList.clear();
-        allTermsList.addAll(repo.getAllTerms());
-        termAdapter.notifyItemRemoved(previouslySelected);
-    }
-*/
-    public void termDetails(View view) {
-        int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
-
         Intent intent = new Intent(Terms.this,AddTerm.class);
         intent.putExtra("termID", selectedTerm.getTermID());
         intent.putExtra("detailView", detailView);
