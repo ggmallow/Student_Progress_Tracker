@@ -42,8 +42,6 @@ public class AddAssessment extends AppCompatActivity {
     public DatePickerDialog datePickerDialog;
     public DatePickerDialog datePickerDialog2;
 
-    public ArrayList<Assessment> allAssessments = new ArrayList<>();
-
 
 //IDs for form
     public RadioGroup assessmentType;
@@ -56,10 +54,6 @@ public class AddAssessment extends AppCompatActivity {
     public Button saveAssessment;
     public TextView detailsInfo;
 
-    public Bundle moddingAssessment;
-    public Bundle assessmentDetails;
-
-    public int modID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +99,7 @@ public class AddAssessment extends AppCompatActivity {
         detailsInfo.setVisibility(View.VISIBLE);
     }
 
-    //Method that provides all data to the form, if navigating from details button. It also disables the fields and hides the save button.
+    //Method populates form with data.
     private void assessmentDetailsInit() {
 
         Repository repo = new Repository(getApplication());
@@ -113,7 +107,6 @@ public class AddAssessment extends AppCompatActivity {
 
         Assessment modifiedAssessment = repo.getAssessmentByID(assessmentID);
 
-        modID = modifiedAssessment.getAssessmentID();
 
         if (modifiedAssessment.getAssessmentType().equals("Performance")) {
             performance.setChecked(true);
@@ -282,10 +275,16 @@ public class AddAssessment extends AppCompatActivity {
                 Toast.makeText(this, "Assessment Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
             } */
 
-            else if (moddingAssessment != null) {
-                Log.println(Log.INFO,"debug", "Mod assessment logic here");
+            else if (getIntent().getExtras() != null) {
+
                 Repository repo = new Repository(getApplication());
-                Assessment modAssessment = new Assessment(modID,tempAssessmentType, assessmentTitle.getText().toString(), getStart.getText().toString(), getEnd.getText().toString(), null);
+                Assessment getCourseID = repo.getAssessmentByID(getIntent().getExtras().getInt("assessmentID"));
+                Assessment modAssessment = new Assessment(
+                        getIntent().getExtras().getInt("assessmentID"),
+                        tempAssessmentType,
+                        assessmentTitle.getText().toString(),
+                        getStart.getText().toString(),
+                        getEnd.getText().toString(), getCourseID.getCourseID());
                 repo.updateAssessment(modAssessment);
 
                 Long alertStartTime = startDate.getTime();
@@ -355,17 +354,4 @@ public class AddAssessment extends AppCompatActivity {
 
     }
 
-   //Used for testing date conversions.  This is a working model.
-    public void test(View view) throws ParseException {
-
-        SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
-        Date testStartDate = test.parse(getStart.getText().toString());
-        Date testEndDate = test.parse(getEnd.getText().toString());
-        if (testStartDate.before(testEndDate)) {
-            Log.println(Log.INFO,"debug", "Victory");
-        } else {
-            Log.println(Log.INFO,"debug", "Fail");
-        }
-
-    }
 }
