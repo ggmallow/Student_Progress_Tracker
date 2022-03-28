@@ -69,7 +69,7 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
             @Override
             public void onClick(View view) {
                 if (termAdapter.checkedPosition == -1) {
-                    Toast.makeText(Terms.this, "You must select a course.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Terms.this, "You must select a term.", Toast.LENGTH_LONG).show();
                     return;
                 }
 

@@ -68,7 +68,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public Button shareNotes;
 
     //Used for modding course
-    //public Bundle moddingCourse;
     public ArrayList<Course> allCourses;
     public int modID;
     public Integer modCourseID;
@@ -78,7 +77,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     //Setting up for selecting Assessments.
     public ArrayList<Assessment> availableAssessments = new ArrayList<>();
     public ArrayList<Assessment> assessmentsAttached = new ArrayList<>();
-    //public ArrayList<Assessment> tempAssessmentsAttached = new ArrayList<>();
     public RecyclerView allAssessmentsRecycler;
 
     public RecyclerView assessmentsToCompleteRecycler;
@@ -151,9 +149,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 courseDetailsInit(); //Setting up if navigating form Course Details button. Disabled as it is being ran in disableUI();
             }
         }
-      //  courseDetailsInit(); //Setting up if navigating form Course Details button. Disabled as it is being ran in disableUI();
-
-
 
         Handler testHandler = new Handler();
         getAvailableAssessments(new GetAllAssessmentsCallback() {
@@ -254,46 +249,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
     }
-/*
-    //Method to set up fields if coming from the Course edit button.
-    private void modCourseInit() {
 
-        if (getIntent().getExtras() != null) {
-
-            allCourses = new ArrayList<Course>();
-
-            Integer courseID = getIntent().getExtras().getInt("courseDetails");
-
-            Repository repo = new Repository(getApplication());
-            Course modifiedCourse = repo.getCourseByID(courseID);
-
-
-            courseTitle.setText(modifiedCourse.getTitle());
-            getStart.setText(modifiedCourse.getStartDate());
-            getEnd.setText(modifiedCourse.getEndDate());
-            modID = modifiedCourse.getCourseID();
-
-
-            statusSpinner.setSelection(statusAdapter.getPosition(modifiedCourse.getStatus()));
-            courseNotes.setText(modifiedCourse.getCourseNotes());
-
-
-            //Setting up Attached Assessments box.
-            assessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
-            //Add loop for null foreign key on Assessments
-            ArrayList<Assessment> tempAssessmentsAttachedCopy = new ArrayList<>(); // Temporary array to hold all assessments with a null courseID;
-            for (Assessment nullCourse: assessmentsAttached) {
-                if (nullCourse.getCourseID() == modifiedCourse.getCourseID()) {
-                    tempAssessmentsAttachedCopy.add(nullCourse);
-                }
-
-            }
-            assessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
-            assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
-
-        }
-    }
-*/
     private void initInstructorPicker() {
         //Setting up instructor box.
         instructorAdapter = new ArrayAdapter<Instructor>(this, android.R.layout.simple_spinner_item, instructorList);

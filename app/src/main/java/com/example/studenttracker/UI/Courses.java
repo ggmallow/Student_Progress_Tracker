@@ -67,6 +67,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
         initDeleteCourse(); //Sets up the delete Course button.
 
+
         Handler testHandler = new Handler();
         courseLabel.setText("Loading...");
         loadCourseData(  new LoadCourseDataCallback () {
@@ -84,6 +85,8 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
             }
         });
+
+
 
     }
 
@@ -169,7 +172,6 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         Intent intent = new Intent(Courses.this,AddCourse.class);
         startActivity(intent);
     }
-
 
     public void editCourse(View view) {
         if (selectedCourse == null) {
