@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
@@ -29,12 +30,10 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
     public ArrayList<Term> allTermsList  = new ArrayList<>();;
     public RecyclerView allTermsRecycler;
 
+    public TextView termsLabel;
     public Term selectedTerm;
-   // public Integer previouslySelected = -1;
     public TermAdapter termAdapter;
     public FloatingActionButton deleteTerms;
-
-
 
 
     @Override
@@ -44,7 +43,7 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         setContentView(R.layout.activity_terms);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        termsLabel = findViewById(R.id.termsLabel);
 
         //Setting up recyclerView
         allTermsRecycler = findViewById(R.id.allTermsRecycler);
@@ -52,12 +51,14 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
 
         allTermsList = new ArrayList<Term>();
         Handler handler = new Handler();
+        termsLabel.setText("Loading...");
         loadTermData(new LoadTermData() {
             @Override
             public void onComplete(List<Term> terms) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        termsLabel.setText("Terms");
                         allTermsList.addAll(terms);
                         termAdapter.notifyDataSetChanged();
                     }

@@ -7,6 +7,7 @@
     tools:context=".UI.Terms">
 
     <TextView
+        android:id="@+id/termsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="123dp"
