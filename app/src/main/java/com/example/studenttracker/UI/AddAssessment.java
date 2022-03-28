@@ -38,6 +38,7 @@ import java.util.Locale;
 
 public class AddAssessment extends AppCompatActivity {
 
+    //Used for date picking
     public DatePickerDialog.OnDateSetListener dateSetListener;
     public DatePickerDialog datePickerDialog;
     public DatePickerDialog datePickerDialog2;
@@ -113,7 +114,6 @@ public class AddAssessment extends AppCompatActivity {
         getEnd.setText(modifiedAssessment.getEndDate());
 
     }
-
 
     // This is setting up the Start Date Picker.
     public void openStartDatePicker(View view) {
