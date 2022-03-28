@@ -27,7 +27,7 @@ public class Repository {
     public Course testCourse;
 
 
-    private static int NUMBER_OF_THREADS = 4;
+    private static int NUMBER_OF_THREADS = 6;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public Repository(Application application) {

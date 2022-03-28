@@ -68,12 +68,12 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
         initDeleteCourse(); //Sets up the delete Course button.
 
 
-        Handler testHandler = new Handler();
+        Handler handler = new Handler();
         courseLabel.setText("Loading...");
         loadCourseData(  new LoadCourseDataCallback () {
             @Override
             public void onComplete(List<Course> courses) {
-                testHandler.post(new Runnable() {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         courseLabel.setText("Courses");
@@ -102,8 +102,8 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
             @Override
             public void run() {
                 Repository repo = new Repository(getApplication()); //Creating new Repository to get Courses.
-                List<Course> test = repo.getAllCourses();
-                callBack.onComplete(test);
+                List<Course> allCourseList = repo.getAllCourses();
+                callBack.onComplete(allCourseList);
 
 
             }

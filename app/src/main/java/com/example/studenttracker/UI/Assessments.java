@@ -9,8 +9,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.studenttracker.Database.Repository;
@@ -19,6 +21,8 @@ import com.example.studenttracker.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class Assessments extends AppCompatActivity implements AssessmentAdapter.assessmentClickListener {
 
@@ -29,6 +33,7 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
     public Integer previouslySelected = -1;
     public AssessmentAdapter assessmentAdapter;
     public FloatingActionButton deleteAssessment;
+    public TextView assessmentsLabel;
 
 
 
@@ -41,10 +46,26 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
         deleteAssessment = findViewById(R.id.deleteAssessment);
         recyclerView = findViewById(R.id.allAssessmentsRecycler);
+        assessmentsLabel = findViewById(R.id.assessmentsLabel);
         allAssessments = new ArrayList<Assessment>();
 
-        Repository repo = new Repository(getApplication());
-        allAssessments.addAll(repo.getAllAssessments());
+        Handler handler = new Handler();
+        assessmentsLabel.setText("Loading...");
+        loadAssessmentData(new LoadAssessmentData() {
+            @Override
+            public void onComplete(List<Assessment> assessments) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        assessmentsLabel.setText("Assessments");
+                        allAssessments.addAll(assessments);
+                        assessmentAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
+        });
+
 
         assessmentAdapter = new AssessmentAdapter(allAssessments, this);
         RecyclerView.LayoutManager layoutManger = new LinearLayoutManager(getApplicationContext());
@@ -56,6 +77,21 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
 
     }
+    interface LoadAssessmentData {
+        void onComplete(List<Assessment> assessments);
+    }
+
+    private void loadAssessmentData(LoadAssessmentData callBack) {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Repository repo = new Repository(getApplication());
+                List<Assessment> getAllAssessments = repo.getAllAssessments();
+                callBack.onComplete(getAllAssessments);
+            }
+        });
+    }
+
 
     private void initDelete() {
 
