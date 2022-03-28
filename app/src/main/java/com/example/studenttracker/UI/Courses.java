@@ -113,7 +113,6 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
     }
 
     private void initDeleteCourse() {
-        //Handles button click, when no assessment is selected.
 
         deleteCourse.setOnClickListener(new View.OnClickListener() {
             @Override

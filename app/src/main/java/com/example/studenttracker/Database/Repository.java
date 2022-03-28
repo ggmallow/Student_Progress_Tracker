@@ -26,6 +26,7 @@ public class Repository {
     public List<Assessment> mAvailableAssessments;
     public Course courseByID;
     public Assessment assessmentByID;
+    public Term termByID;
 
 
     private static int NUMBER_OF_THREADS = 6;
@@ -89,6 +90,23 @@ public class Repository {
         }
         return mAllTerms;
     }
+
+    //This will get a Term by ID
+    public Term getTermByID(Integer termID) {
+
+        databaseExecutor.execute(()->{
+            termByID = mTermDAO.getTermByID(termID);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return termByID;
+    }
+
+
+
 
 //This section of code will be for Assessments
 

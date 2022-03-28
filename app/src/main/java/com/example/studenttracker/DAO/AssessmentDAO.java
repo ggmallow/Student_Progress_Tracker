@@ -31,6 +31,7 @@ public interface AssessmentDAO {
     @Query("SELECT * FROM assessments WHERE courseID IS null")
     List<Assessment> getAvailableAssessments();
 
+
     @Query("SELECT * FROM assessments WHERE assessmentID = :assessmentID")
     Assessment getAssessmentByID(Integer assessmentID);
 }

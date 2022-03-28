@@ -56,17 +56,10 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public Course selectedCourse; // Used to pick courses in Recycler View
     public CourseAdapter courseAdapter; // Borrowed adapter from Courses activity, to display data properly.
 
-    public Bundle moddingTerm; // Transferred Term position.
-    public Bundle termDetails; // Transferred Term position.
-
-    public Integer modID;
-
     //Setting up Courses being Taken
     public ArrayList<Course> allCoursesEnrolled = new ArrayList<>();
     public RecyclerView attachedCoursesRecycler;
     public CourseAdapter2 courseAdapter2;
-
-
 
     public ArrayList<Course> allCoursesTemp = new ArrayList<>(); // Used to keep allCourse list complete, while adding courses.
     @Override
@@ -124,82 +117,43 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
         allCoursesTemp.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
         allCoursesTemp.addAll(tempCourseAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
+        if (getIntent().getExtras() != null ) {
+            if (getIntent().getExtras().getInt("detailView") == 1) {
+                disableUI();
+            }
 
-        modTermInit();
-        termDetailsInit();
+            if (getIntent().getExtras().getInt("termID") > 0) {
+                termDetailsInit();
+            }
+        }
+
+    }
+
+    private void disableUI() {
+        //Disabling all fields to prevent editing
+        termName.setEnabled(false);
+        getStart.setEnabled(false);
+        getEnd.setEnabled(false);
+        allCoursesRecycler.setEnabled(false);
+        attachCourse.setEnabled(false);
+        detachCourse.setEnabled(false);
+        saveTerm.setVisibility(View.GONE);
+        detailsInfo.setVisibility(View.VISIBLE);
     }
 
     private void termDetailsInit() {
         try {
-            termDetails = getIntent().getExtras();
-            if (termDetails.getInt("detailView") == 1) {
-                int passedPosition = termDetails.getInt("termDetails");
-                //Disabling all fields to prevent editing
-                termName.setEnabled(false);
-                getStart.setEnabled(false);
-                getEnd.setEnabled(false);
-                allCoursesRecycler.setEnabled(false);
-                attachCourse.setEnabled(false);
-                detachCourse.setEnabled(false);
-                saveTerm.setVisibility(View.GONE);
-                detailsInfo.setVisibility(View.VISIBLE);
-
-
-
-                ArrayList<Term> allTerms = new ArrayList<Term>();
-
-                Repository repo = new Repository(getApplication());
-                allTerms.addAll(repo.getAllTerms());
-
-                Term modTerm = new Term(
-                        allTerms.get(passedPosition).getTermID(),
-                        allTerms.get(passedPosition).getTitle(),
-                        allTerms.get(passedPosition).getStartDate(),
-                        allTerms.get(passedPosition).getEndDate());
-
-                termName.setText(modTerm.getTitle());
-                getStart.setText(modTerm.getStartDate());
-                getEnd.setText(modTerm.getEndDate());
-
-                ArrayList<Course> tempCourse = new ArrayList();
-                for (Course nullTerm: allCourses) {
-                    if (nullTerm.getTermID() == allTerms.get(passedPosition).getTermID()) {
-                        tempCourse.add(nullTerm);
-
-                    }
-                }
-                allCoursesEnrolled.clear();
-                allCoursesEnrolled.addAll(tempCourse);
-            }
-        } catch (Exception e) {
-            //e.printStackTrace();
-            Log.println(Log.INFO,"debug", "Null pointer has occurred.");
-        }
-    }
-
-    private void modTermInit() {
-        moddingTerm = getIntent().getExtras();
-        if (moddingTerm != null) {
-            int passedPosition = moddingTerm.getInt("moddingTerm");
-            ArrayList<Term> allTerms = new ArrayList<Term>();
 
             Repository repo = new Repository(getApplication());
-            allTerms.addAll(repo.getAllTerms());
+            Term modifiedTerm = repo.getTermByID(getIntent().getExtras().getInt("termID"));
 
-            Term modTerm = new Term(
-                    allTerms.get(passedPosition).getTermID(),
-                    allTerms.get(passedPosition).getTitle(),
-                    allTerms.get(passedPosition).getStartDate(),
-                    allTerms.get(passedPosition).getEndDate());
-            modID = allTerms.get(passedPosition).getTermID();
-
-            termName.setText(modTerm.getTitle());
-            getStart.setText(modTerm.getStartDate());
-            getEnd.setText(modTerm.getEndDate());
+            termName.setText(modifiedTerm.getTitle());
+            getStart.setText(modifiedTerm.getStartDate());
+            getEnd.setText(modifiedTerm.getEndDate());
 
             ArrayList<Course> tempCourse = new ArrayList();
             for (Course nullTerm: allCourses) {
-                if (nullTerm.getTermID() == allTerms.get(passedPosition).getTermID()) {
+                if (nullTerm.getTermID() == modifiedTerm.getTermID()) {
                     tempCourse.add(nullTerm);
 
                 }
@@ -207,7 +161,9 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             allCoursesEnrolled.clear();
             allCoursesEnrolled.addAll(tempCourse);
 
-
+        } catch (Exception e) {
+            //e.printStackTrace();
+            Log.println(Log.INFO,"debug", "Null pointer has occurred.");
         }
     }
 
@@ -339,9 +295,10 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             //Not allowing for Start Date to be equal to End Date.
             if (startDate.equals(endDate)) {
                 Toast.makeText(this, "Term Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
-            } else if (moddingTerm != null) {
-                Log.println(Log.INFO,"debug", "Mod Term logic here");
+            } else if (getIntent().getExtras() != null) {
+
                 Repository repo = new Repository(getApplication());
+
 
 
 
@@ -353,7 +310,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                             attachingTerm.getStatus(),
                             attachingTerm.getInstructor(),
                             attachingTerm.getCourseNotes(),
-                            modID);
+                            getIntent().getExtras().getInt("termID"));
                     repo.updateCourse(modCourse);
 
                 }
@@ -374,7 +331,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
 
                 Term modTerm = new Term(
-                        modID,
+                        getIntent().getExtras().getInt("termID"),
                         termName.getText().toString(),
                         getStart.getText().toString(),
                         getEnd.getText().toString());
@@ -503,31 +460,13 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     @Override
     public void onCourseClick(int position) {
         termName.clearFocus(); //Clearing focus to fix UI skipping
-        selectedCourse = new Course(
-                allCoursesTemp.get(position).getCourseID(),
-                allCoursesTemp.get(position).getTitle(),
-                allCoursesTemp.get(position).getStartDate(),
-                allCoursesTemp.get(position).getEndDate(),
-                allCoursesTemp.get(position).getStatus(),
-                allCoursesTemp.get(position).getInstructor(),
-                allCoursesTemp.get(position).getCourseNotes(),
-                null);
-
+        selectedCourse = allCoursesTemp.get(position);
     }
 
     @Override
     public void onCourseClick2(int position) {
         termName.clearFocus(); //Clearing focus to fix UI skipping
-        selectedCourse = new Course(
-                allCoursesEnrolled.get(position).getCourseID(),
-                allCoursesEnrolled.get(position).getTitle(),
-                allCoursesEnrolled.get(position).getStartDate(),
-                allCoursesEnrolled.get(position).getEndDate(),
-                allCoursesEnrolled.get(position).getStatus(),
-                allCoursesEnrolled.get(position).getInstructor(),
-                allCoursesEnrolled.get(position).getCourseNotes(),
-                null);
-
+        selectedCourse = allCoursesEnrolled.get(position);
     }
 
 }

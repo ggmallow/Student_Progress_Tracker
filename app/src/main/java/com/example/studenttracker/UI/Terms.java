@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -21,13 +22,15 @@ import com.example.studenttracker.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class Terms extends AppCompatActivity implements TermAdapter.OnTermListener{
     public ArrayList<Term> allTermsList  = new ArrayList<>();;
     public RecyclerView allTermsRecycler;
 
     public Term selectedTerm;
-    public Integer previouslySelected = -1;
+   // public Integer previouslySelected = -1;
     public TermAdapter termAdapter;
     public FloatingActionButton deleteTerms;
 
@@ -48,9 +51,19 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         deleteTerms = findViewById(R.id.deleteTerms);
 
         allTermsList = new ArrayList<Term>();
-
-        Repository repo = new Repository(getApplication());
-        allTermsList.addAll(repo.getAllTerms());
+        Handler handler = new Handler();
+        loadTermData(new LoadTermData() {
+            @Override
+            public void onComplete(List<Term> terms) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        allTermsList.addAll(terms);
+                        termAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
 
         termAdapter = new TermAdapter(allTermsList, this);
 
@@ -61,6 +74,23 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
 
         initDeleteTerm();
 
+    }
+
+    interface LoadTermData {
+        void onComplete(List<Term> terms);
+    }
+
+    private void loadTermData(LoadTermData callBack) {
+
+
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Repository repo = new Repository(getApplication());
+                List<Term> allTerms = repo.getAllTerms();
+                callBack.onComplete(allTerms);
+            }
+        });
     }
 
     private void initDeleteTerm() {
@@ -101,11 +131,11 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
                                 repo.deleteCourse(toDelete);
                             }
                         }
+                        int selectedTermIndex = allTermsList.indexOf(selectedTerm);
 
                         repo.deleteTerm(selectedTerm);
-                        allTermsList.clear();
-                        allTermsList.addAll(repo.getAllTerms());
-                        termAdapter.notifyItemRemoved(previouslySelected);
+                        allTermsList.remove(selectedTerm);
+                        termAdapter.notifyItemRemoved(selectedTermIndex);
                         termAdapter.checkedPosition = -1;
 
                     }
@@ -124,20 +154,20 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
     }
 
     public void editTerms(View view) {
-        if (previouslySelected == -1) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+        if (selectedTerm == null) {
+            Toast.makeText(this, "You must select a Term.", Toast.LENGTH_LONG).show();
             return;
         }
 
         Intent intent = new Intent(Terms.this,AddTerm.class);
-        intent.putExtra("moddingTerm", previouslySelected);
+        intent.putExtra("termID", selectedTerm.getTermID());
         startActivity(intent);
     }
 
-    public void deleteTerms(View view) {
+   /* public void deleteTerms(View view) {
         //Handles button click, when no assessment is selected.
-        if (previouslySelected == -1) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+        if (selectedTerm == null) {
+            Toast.makeText(this, "You must select a Term.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -147,27 +177,19 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
         allTermsList.addAll(repo.getAllTerms());
         termAdapter.notifyItemRemoved(previouslySelected);
     }
-
+*/
     public void termDetails(View view) {
         int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
 
         Intent intent = new Intent(Terms.this,AddTerm.class);
-        intent.putExtra("termDetails", previouslySelected);
+        intent.putExtra("termID", selectedTerm.getTermID());
         intent.putExtra("detailView", detailView);
         startActivity(intent);
     }
 
     @Override
     public void onTermClick(int position) {
-        Log.println(Log.INFO,"debug", "You have picked: " + allTermsList.get(position).getTitle());
-        previouslySelected = position;
-
-        //Creates an assessment based off selection. Used for delete method.
-        selectedTerm = new Term(
-                Integer.parseInt(String.valueOf(allTermsList.get(position).getTermID())),
-                allTermsList.get(position).getTitle(),
-                allTermsList.get(position).getStartDate(),
-                allTermsList.get(position).getEndDate());
+        selectedTerm = allTermsList.get(position);
 
     }
 }
