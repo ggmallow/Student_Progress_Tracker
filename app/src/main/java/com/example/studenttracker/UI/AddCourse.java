@@ -118,6 +118,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
         statusAdapter = ArrayAdapter.createFromResource(this, R.array.status_options, android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(statusAdapter);
 
+
         //Adding instructors
         Instructor testInstructor = new Instructor("John", 1234561234, "test@wgu.edu");
         instructorList.add(testInstructor);

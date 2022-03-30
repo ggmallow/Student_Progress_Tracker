@@ -7,7 +7,7 @@
 
 
     <string-array  name="status_options">
-        <item name="In Progress">Select a Status</item>
+        <item name="In Progress"><font color="#808080">Select a Status</font></item>
         <item name="In Progress">In Progress</item>
         <item name="Completed">Completed</item>
         <item name="Dropped">Dropped</item>
