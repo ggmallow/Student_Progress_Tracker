@@ -502,7 +502,19 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
     public void attachCourse(View view) {
 
         if (courseAdapter.checkedPosition == -1) {
-            Log.println(Log.INFO,"debug", "You must select an assessment.");
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select an assessment.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
         } else {
             allCoursesEnrolled.add(selectedCourse);
             courseAdapter2.notifyDataSetChanged();
@@ -516,7 +528,17 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
     public void detachCourse(View view) {
         if (courseAdapter2.checkedPosition == -1) {
-            Log.println(Log.INFO,"debug", "You must select an assessment.");
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select an assessment.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
         } else {
             allCoursesTemp.add(selectedCourse);
             courseAdapter.notifyDataSetChanged();
@@ -524,7 +546,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             courseAdapter2.notifyDataSetChanged();
             courseAdapter2.checkedPosition = -1;
         }
-        Log.println(Log.INFO,"debug", allCoursesEnrolled.toString());
 
     }
 
