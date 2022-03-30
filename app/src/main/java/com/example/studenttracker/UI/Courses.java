@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.service.controls.actions.FloatAction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -118,7 +120,19 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
             @Override
             public void onClick(View view) {
                 if (courseAdapter.checkedPosition == -1) {
-                    Toast.makeText(Courses.this, "You must select a course.", Toast.LENGTH_LONG).show();
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.custom_toast,
+                            (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                    TextView text = (TextView) layout.findViewById(R.id.text);
+                    text.setText("You must select a course.");
+
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout);
+                    toast.show();
+
                     return;
                 }
 
@@ -174,7 +188,19 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
     public void editCourse(View view) {
         if (selectedCourse == null) {
-            Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select a course.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
         Intent intent = new Intent(Courses.this,AddCourse.class);
@@ -190,7 +216,19 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
 
         //Handles button click, when no assessment is selected.
         if (selectedCourse == null) {
-            Toast.makeText(this, "You must select a course.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select a course.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
 
