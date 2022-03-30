@@ -72,7 +72,6 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     //Used for modding course
     public ArrayList<Course> allCourses;
     public int modID;
-    public Integer modCourseID;
 
     //Used for detailed View
 
@@ -228,6 +227,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 getStart.setText(modifiedCourse.getStartDate());
                 getEnd.setText(modifiedCourse.getEndDate());
                 modID = modifiedCourse.getCourseID();
+
 
 
                 statusSpinner.setSelection(statusAdapter.getPosition(modifiedCourse.getStatus()));
@@ -505,12 +505,14 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                             attachingCourse.getAssessmentType(),
                             attachingCourse.getAssessmentTitle(),
                             attachingCourse.getStartDate(),
-                            attachingCourse.getEndDate(),modCourseID);
+                            attachingCourse.getEndDate(),modID);
                     repo.updateAssessment(modAssessment);
+
 
                 }
 
-               /* for (Assessment detachingCourse: tempAssessmentsAttached) {
+                for (Assessment detachingCourse: availableAssessments) {
+
                     Assessment modAssessment = new Assessment(detachingCourse.getAssessmentID(),
                             detachingCourse.getAssessmentType(),
                             detachingCourse.getAssessmentTitle(),
@@ -518,7 +520,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                             detachingCourse.getEndDate(),null);
                     repo.updateAssessment(modAssessment);
 
-                }*/
+                }
 
                 Course modCourse = new Course(modID,
                         courseTitle.getText().toString(),
@@ -566,6 +568,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                         instructorSpinner.getSelectedItem().toString(),
                         courseNotes.getText().toString(),null);
                 repo.insertCourse(newCourse);
+
 
                 allCourses = new ArrayList<Course>();
                 allCourses.addAll(repo.getAllCourses());
