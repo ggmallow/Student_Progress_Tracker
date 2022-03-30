@@ -46,7 +46,12 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.My
         @Override
         public void onClick(View view) {
 
-            mAssessmentClickListener.onAssessmentClick(getAdapterPosition());
+            try {
+                mAssessmentClickListener.onAssessmentClick(getAdapterPosition());
+            } catch (Exception e) {
+                Log.println(Log.INFO,"debug", "Null click");
+
+            }
 
 
         }

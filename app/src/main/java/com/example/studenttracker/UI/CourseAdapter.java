@@ -1,6 +1,7 @@
 package com.example.studenttracker.UI;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
 
         @Override
         public void onClick(View view) {
-            onCourseListener.onCourseClick(getAdapterPosition());
+            try {
+                onCourseListener.onCourseClick(getAdapterPosition());
+            } catch (Exception e) {
+                Log.println(Log.INFO,"debug", "Null click");
+            }
         }
     }
 
