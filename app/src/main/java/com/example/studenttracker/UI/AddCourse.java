@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +212,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 detailsInfo.setVisibility(View.VISIBLE);
 
     }
-
+//Sets up course details when editing or viewing details.
     private void courseDetailsInit() {
         try {
 
@@ -229,8 +230,26 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 modID = modifiedCourse.getCourseID();
 
 
+                if (modifiedCourse.getStatus().equals("In Progress")) {
+                    statusSpinner.setSelection(1);
+                    return;
+                    }
+                if (modifiedCourse.getStatus().equals("Completed")) {
+                    Log.println(Log.INFO,"debug", "Made.");
+                    statusSpinner.setSelection(2);
+                    return;
+                    }
+                if (modifiedCourse.getStatus().equals("Dropped")) {
+                    Log.println(Log.INFO,"debug", "Made.");
+                    statusSpinner.setSelection(3);
+                    return;
+                    }
+                if (modifiedCourse.getStatus().equals("Plan to Take")) {
+                    Log.println(Log.INFO,"debug", "Made.");
+                    statusSpinner.setSelection(4);
+                    }
 
-                statusSpinner.setSelection(statusAdapter.getPosition(modifiedCourse.getStatus()));
+
                 courseNotes.setText(modifiedCourse.getCourseNotes());
 
 
@@ -439,7 +458,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
                 return;
             }
-            if (statusSpinner.getSelectedItem().equals("Select a Status")) {
+            if (statusSpinner.getSelectedItem().toString().equals("Select a Status")) {
 
                 LayoutInflater inflater = getLayoutInflater();
                 View layout = inflater.inflate(R.layout.custom_toast,
