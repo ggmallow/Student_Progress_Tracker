@@ -235,20 +235,16 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                     return;
                     }
                 if (modifiedCourse.getStatus().equals("Completed")) {
-                    Log.println(Log.INFO,"debug", "Made.");
                     statusSpinner.setSelection(2);
                     return;
                     }
                 if (modifiedCourse.getStatus().equals("Dropped")) {
-                    Log.println(Log.INFO,"debug", "Made.");
                     statusSpinner.setSelection(3);
                     return;
                     }
                 if (modifiedCourse.getStatus().equals("Plan to Take")) {
-                    Log.println(Log.INFO,"debug", "Made.");
                     statusSpinner.setSelection(4);
                     }
-
 
                 courseNotes.setText(modifiedCourse.getCourseNotes());
 
@@ -655,7 +651,18 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
     public void attachAssessment(View view) {
         if (assessmentAdapter.checkedPosition == -1) {
-            Toast.makeText(this,"You must select an assessment.",Toast.LENGTH_LONG).show();
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select an assessment.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
 
         } else {
            assessmentsAttached.add(selectedAssessment);
@@ -671,7 +678,19 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
     public void detachAssessment(View view) {
 
         if (assessmentAdapter2.checkedPosition == -1) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select an assessment.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
 
         } else {
             availableAssessments.add(selectedAssessment);
