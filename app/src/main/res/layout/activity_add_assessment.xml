@@ -39,22 +39,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:ems="10"
-        android:minHeight="48dp"
         android:hint="Title"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/assessmentType" />
 
     <TextView
         android:id="@+id/startDate"
+        style="?android:spinnerStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        style="?android:spinnerStyle"
         android:layout_marginTop="50dp"
         android:ems="10"
+        android:hint="Pick a Start Date"
         android:inputType="date"
         android:minHeight="48dp"
-        android:hint="Pick a Start Date"
         android:onClick="openStartDatePicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,14 +62,14 @@
 
     <TextView
         android:id="@+id/endDate"
+        style="?android:spinnerStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        style="?android:spinnerStyle"
         android:layout_marginTop="50dp"
         android:ems="10"
+        android:hint="Pick a End Date"
         android:inputType="date"
         android:minHeight="48dp"
-        android:hint="Pick a End Date"
         android:onClick="openEndDatePicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,8 +80,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="Save"
         android:onClick="saveAssessment"
+        android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDate" />
@@ -93,12 +93,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
-        android:textStyle="bold"
         android:text="You can not change details from the Assessment Details menu. If you need to edit an assessment, visit the edit menu."
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDate" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

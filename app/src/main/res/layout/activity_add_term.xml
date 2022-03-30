@@ -24,182 +24,182 @@
                 android:layout_height="match_parent"
                 tools:context=".UI.AddCourse">
 
-    <EditText
-        android:id="@+id/termName"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:hint="Term Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                <EditText
+                    android:id="@+id/termName"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:ems="10"
+                    android:hint="Term Name"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/startDate"
-        style="?android:spinnerStyle"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
-        android:onClick="openStartDatePicker"
-        android:hint="Start Date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.434"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termName" />
+                <TextView
+                    android:id="@+id/startDate"
+                    style="?android:spinnerStyle"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="Start Date"
+                    android:minHeight="48dp"
+                    android:onClick="openStartDatePicker"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.434"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/termName" />
 
-    <TextView
-        android:id="@+id/endDate"
-        style="?android:spinnerStyle"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
-        android:onClick="openEndDatePicker"
-        android:hint="End Date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.434"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termName" />
+                <TextView
+                    android:id="@+id/endDate"
+                    style="?android:spinnerStyle"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="150dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="End Date"
+                    android:minHeight="48dp"
+                    android:onClick="openEndDatePicker"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.434"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/termName" />
 
-    <Button
-        android:id="@+id/saveTerm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Save"
-        android:onClick="saveTerm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+                <Button
+                    android:id="@+id/saveTerm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:onClick="saveTerm"
+                    android:text="Save"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
-    <TextView
-        android:id="@+id/detailsInfo"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-        android:textStyle="bold"
-        android:text="You can not change details from the Term Details menu. If you need to edit an term, visit the edit menu."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+                <TextView
+                    android:id="@+id/detailsInfo"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="You can not change details from the Term Details menu. If you need to edit an term, visit the edit menu."
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
-    <Button
-        android:id="@+id/attachCourse"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="100dp"
-        android:text=""
-        app:icon="@drawable/add"
-        android:onClick="attachCourse"
-        app:layout_constraintBottom_toTopOf="@+id/enrolledCourses"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
+                <Button
+                    android:id="@+id/attachCourse"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="100dp"
+                    android:onClick="attachCourse"
+                    android:text=""
+                    app:icon="@drawable/add"
+                    app:layout_constraintBottom_toTopOf="@+id/enrolledCourses"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
 
-    <Button
-        android:id="@+id/detachCourse"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="90dp"
-        android:text=""
-        app:icon="@drawable/delete"
-        android:onClick="detachCourse"
-        app:layout_constraintBottom_toTopOf="@+id/saveTerm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
+                <Button
+                    android:id="@+id/detachCourse"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="90dp"
+                    android:onClick="detachCourse"
+                    android:text=""
+                    app:icon="@drawable/delete"
+                    app:layout_constraintBottom_toTopOf="@+id/saveTerm"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
 
-    <TextView
-        android:id="@+id/courses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="154dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="154dp"
-        android:text="Available Courses"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDate" />
+                <TextView
+                    android:id="@+id/courses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="154dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="154dp"
+                    android:text="Available Courses"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.49"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/endDate" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="250dp"
-        android:layout_height="180dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/border"
-        app:layout_constraintTop_toBottomOf="@+id/courses">
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/attachedCourses"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:layout_constraintStart_toStartOf="parent">
+                <RelativeLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="250dp"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginTop="33dp"
+                    android:layout_marginEnd="80dp"
+                    android:background="@drawable/border"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/courses">
 
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </RelativeLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/attachedCourses"
+                        android:layout_width="240dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        app:layout_constraintStart_toStartOf="parent">
 
 
-    <TextView
-        android:id="@+id/enrolledCourses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="154dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="154dp"
-        android:text="Enrolled Courses"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="250dp"
-        android:layout_height="180dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/border"
-        app:layout_constraintTop_toBottomOf="@+id/enrolledCourses">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/attachedCoursesRecycler"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:layout_constraintStart_toStartOf="parent">
+                    </androidx.recyclerview.widget.RecyclerView>
+                </RelativeLayout>
 
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/enrolledCourses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="154dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="154dp"
+                    android:text="Enrolled Courses"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.49"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="250dp"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginTop="33dp"
+                    android:layout_marginEnd="80dp"
+                    android:background="@drawable/border"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/enrolledCourses">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/attachedCoursesRecycler"
+                        android:layout_width="240dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        app:layout_constraintStart_toStartOf="parent">
+
+
+                    </androidx.recyclerview.widget.RecyclerView>
+                </RelativeLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
