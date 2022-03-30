@@ -46,6 +46,18 @@
         app:layout_constraintTop_toBottomOf="@+id/assessmentType" />
 
     <TextView
+        android:id="@+id/assessmentTitleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Assessment Title"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assessmentType" />
+
+    <TextView
         android:id="@+id/endDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,6 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startDate" />
+
     <TextView
         android:id="@+id/startDateLabel"
         android:layout_width="wrap_content"
