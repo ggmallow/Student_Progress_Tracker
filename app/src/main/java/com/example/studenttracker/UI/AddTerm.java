@@ -522,7 +522,6 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
             courseAdapter.notifyDataSetChanged();
             courseAdapter.checkedPosition = -1;
         }
-        Log.println(Log.INFO,"debug", allCoursesEnrolled.toString());
 
     }
 

@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,7 +104,19 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
             public void onClick(View view) {
                 Log.println(Log.INFO, "debug1", String.valueOf(assessmentAdapter.checkedPosition));
                 if (assessmentAdapter.checkedPosition == -1) {
-                    Toast.makeText(Assessments.this, "Select an assessment.", Toast.LENGTH_LONG).show();
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.custom_toast,
+                            (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                    TextView text = (TextView) layout.findViewById(R.id.text);
+                    text.setText("You must select an assessment.");
+
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout);
+                    toast.show();
+
                     return;
 
                 }
@@ -130,10 +144,21 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
 
                             if (selectedAssessment.getCourseID() != null) {
-                                Toast.makeText(Assessments.this, "You can't delete this because its attached to a course", Toast.LENGTH_LONG).show();
+
+                                LayoutInflater inflater = getLayoutInflater();
+                                View layout = inflater.inflate(R.layout.custom_toast,
+                                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                                TextView text = (TextView) layout.findViewById(R.id.text);
+                                text.setText("You can't delete this because its attached to a course.");
+
+                                Toast toast = new Toast(getApplicationContext());
+                                toast.setDuration(Toast.LENGTH_LONG);
+                                toast.setView(layout);
+                                toast.show();
+
 
                             } else {
-                                Log.println(Log.INFO, "debug", "CourseID = " + selectedAssessment.getCourseID());
 
                                 repo.deleteAssessment(selectedAssessment);
                                 allAssessments.clear();
@@ -162,7 +187,19 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
     public void editAssessment(View view) {
 
         if (selectedAssessment == null) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select an assessment.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
 
@@ -179,7 +216,17 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
         //Handles button click, when no assessment is selected.
         if (selectedAssessment == null) {
-            Toast.makeText(this, "You must select an assessment.", Toast.LENGTH_LONG).show();
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select an assessment.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
             return;
         }
 
