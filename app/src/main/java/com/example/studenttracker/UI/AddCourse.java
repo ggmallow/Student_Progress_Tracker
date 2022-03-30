@@ -14,7 +14,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -387,19 +389,69 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
         try {
             if (courseTitle.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
+
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't entered a title.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
+
                 return;
             }
             if (getStart.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't entered a Start Date", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't entered a Start Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
             if (getEnd.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't entered a End Date", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't entered a End Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
             if (statusSpinner.getSelectedItem().equals("Select a Status")) {
-                    Toast.makeText(this, "You must select a valid status", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You must select a valid status.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
 
@@ -410,12 +462,36 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
             //Making sure Start Date is before the End Date
             if (endDate.before(startDate)) {
-                Toast.makeText(this, "Course End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("Course End Date must be after Start Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
             //Not allowing for Start Date to be equal to End Date.
             if (startDate.equals(endDate)) {
-                Toast.makeText(this, "Course Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("Course Start Date can not equal End Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
 
             }
 
