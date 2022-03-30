@@ -10,8 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,7 +99,19 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
             @Override
             public void onClick(View view) {
                 if (selectedTerm == null) {
-                    Toast.makeText(Terms.this, "You must select a Term.", Toast.LENGTH_LONG).show();
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.custom_toast,
+                            (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                    TextView text = (TextView) layout.findViewById(R.id.text);
+                    text.setText("You must select a Term.");
+
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout);
+                    toast.show();
+
                     return;
                 }
 
@@ -128,7 +142,19 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
 
                        for (Course doNotDelete : coursesToDelete) {
                             if (doNotDelete.getTermID() == selectedTerm.getTermID()) {
-                                Toast.makeText(Terms.this, "You can not delete a Term that has Courses assigned.", Toast.LENGTH_LONG).show();
+                                LayoutInflater inflater = getLayoutInflater();
+                                View layout = inflater.inflate(R.layout.custom_toast,
+                                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                                TextView text = (TextView) layout.findViewById(R.id.text);
+                                text.setText("You can not delete a Term that has Courses assigned.");
+
+                                Toast toast = new Toast(getApplicationContext());
+                                toast.setDuration(Toast.LENGTH_LONG);
+                                toast.setView(layout);
+                                toast.show();
+
+
                                 return;
                             }
                         }
@@ -157,7 +183,19 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
 
     public void editTerms(View view) {
         if (selectedTerm == null) {
-            Toast.makeText(this, "You must select a Term.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select a Term.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
 
@@ -169,7 +207,19 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
     public void termDetails(View view) {
         int detailView = 1; // Used for UI, when navigating to detail view. This helps bc of bundle confusion.
         if (selectedTerm == null) {
-            Toast.makeText(this, "You must select a Term.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) findViewById(R.id.custom_toast_container));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("You must select a Term.");
+
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
         Intent intent = new Intent(Terms.this,AddTerm.class);
