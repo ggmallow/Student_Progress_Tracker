@@ -1,5 +1,6 @@
 package com.example.studenttracker.UI;
 
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,9 +13,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -269,18 +275,56 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
         try {
             if (termName.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't entered a Term Name", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't entered a Term Name");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
 
             if (getStart.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't set a Start Date", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't set a Start Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+                //Add this stuff if we have time, it will need an additional method to clear colors if selected(focus).
+                /*getStart.getBackground().setTint(Color.parseColor("#FF9494"));
+                getStart.setHintTextColor(Color.parseColor("#FF9494"));*/
                 return;
             }
 
             if (getEnd.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't set a End Date", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't set a End Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
                 return;
+
             }
             // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
             SimpleDateFormat test = new SimpleDateFormat("MMM dd yyyy", Locale.getDefault());
@@ -289,12 +333,39 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
 
             //Making sure Start Date is before the End Date
             if (endDate.before(startDate)) {
-                Toast.makeText(this, "Term End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("Term End Date must be after Start Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
+
                 return;
             }
             //Not allowing for Start Date to be equal to End Date.
             if (startDate.equals(endDate)) {
-                Toast.makeText(this, "Term Start Date can not equal End Date.", Toast.LENGTH_LONG).show();
+
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("Term Start Date can not equal End Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
+
             } else if (getIntent().getExtras() != null) {
 
                 Repository repo = new Repository(getApplication());
@@ -416,7 +487,7 @@ public class AddTerm extends AppCompatActivity implements CourseAdapter.OnCourse
                 alarmManagerStart.set(AlarmManager.RTC_WAKEUP,alertStartTime, startTime);
                 alarmManagerEnd.set(AlarmManager.RTC_WAKEUP,alertEndTime, endTime);
 
-                Toast.makeText(this, "Term Saved, Check Database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Term Saved.", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(AddTerm.this,Terms.class);
                 startActivity(intent);
 
