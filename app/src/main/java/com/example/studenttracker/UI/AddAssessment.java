@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -221,7 +223,19 @@ public class AddAssessment extends AppCompatActivity {
 
         try {
             if (assessmentType.getCheckedRadioButtonId() == -1) {
-                Toast.makeText(this, "You must select the Assessment Type", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You must select the Assessment Type.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
 
@@ -232,20 +246,68 @@ public class AddAssessment extends AppCompatActivity {
             }
 
             if (assessmentTitle.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You haven't entered a title", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You haven't entered a title.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
             if (assessmentTitle.getText().toString().length() > 25) {
-                Toast.makeText(this, "Please choose a title 25 or less characters.", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("Please choose a title 25 or less characters.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
             if (getStart.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You must pick a Start Date", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You must pick a Start Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
 
             if (getEnd.getText().toString().isEmpty()) {
-                Toast.makeText(this, "You must pick a End Date", Toast.LENGTH_LONG).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("You must pick a End Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+
                 return;
             }
             // Setting a date formatter to convert strings to actual Dates. https://www.baeldung.com/java-string-to-date
@@ -255,7 +317,19 @@ public class AddAssessment extends AppCompatActivity {
 
             //Making sure Start Date is before the End Date
             if (endDate.before(startDate)) {
-                Toast.makeText(this, "Assessment End Date must be after Start Date.", Toast.LENGTH_LONG).show();
+
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.custom_toast,
+                        (ViewGroup) findViewById(R.id.custom_toast_container));
+
+                TextView text = (TextView) layout.findViewById(R.id.text);
+                text.setText("Assessment End Date must be after Start Date.");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
 
             }
             //Not allowing for Start Date to be equal to End Date.
@@ -300,7 +374,6 @@ public class AddAssessment extends AppCompatActivity {
                 startActivity(intent);
             }else {
 
-
                 Repository repo = new Repository(getApplication());
                 Assessment newAssessment = new Assessment(
                         null,
@@ -311,7 +384,6 @@ public class AddAssessment extends AppCompatActivity {
                         null);
 
                 repo.insertAssessment(newAssessment);
-
 
 
                 Long alertStartTime = startDate.getTime();
