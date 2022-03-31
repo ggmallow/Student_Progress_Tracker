@@ -232,22 +232,19 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
                 if (modifiedCourse.getStatus().equals("In Progress")) {
                     statusSpinner.setSelection(1);
-                    return;
-                    }
+                    } else
                 if (modifiedCourse.getStatus().equals("Completed")) {
                     statusSpinner.setSelection(2);
-                    return;
-                    }
+
+                    } else
                 if (modifiedCourse.getStatus().equals("Dropped")) {
                     statusSpinner.setSelection(3);
-                    return;
-                    }
+                    } else
                 if (modifiedCourse.getStatus().equals("Plan to Take")) {
                     statusSpinner.setSelection(4);
                     }
 
                 courseNotes.setText(modifiedCourse.getCourseNotes());
-
 
                 //Setting up Attached Assessments box.
                 assessmentsAttached.addAll(repo.getAllAssessments());//Use for temporary list, so original isn't modified.
@@ -260,7 +257,7 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
 
                 }
                 assessmentsAttached.clear(); //Clear tempAssessmentsAttached so values reflect accurately.
-                assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mpAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
+                assessmentsAttached.addAll(tempAssessmentsAttachedCopy); //Setting to mAssessmentsAttached to match the tempAssessmentsAttachedCopy(all assessments with no course attached)
 
 
 
