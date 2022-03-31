@@ -171,6 +171,7 @@ public class Courses extends AppCompatActivity implements CourseAdapter.OnCourse
                             allCourses.remove(selectedCourse);
                             courseAdapter.notifyItemRemoved(selectedCourseIndex);
                             courseAdapter.checkedPosition = -1;
+                            selectedCourse = null;
 
                         }
                     });

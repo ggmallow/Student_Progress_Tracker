@@ -32,7 +32,6 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
     private RecyclerView recyclerView;
     public Assessment selectedAssessment;
-    public Integer previouslySelected = -1;
     public AssessmentAdapter assessmentAdapter;
     public FloatingActionButton deleteAssessment;
     public TextView assessmentsLabel;
@@ -160,11 +159,21 @@ public class Assessments extends AppCompatActivity implements AssessmentAdapter.
 
                             } else {
 
+
+                               /*    int selectedTermIndex = allTermsList.indexOf(selectedTerm);
+
+                        repo.deleteTerm(selectedTerm);
+                        allTermsList.remove(selectedTerm);
+                        termAdapter.notifyItemRemoved(selectedTermIndex);
+                        selectedTerm = null;*/
+
+                                int selectedAssessmentIndex = allAssessments.indexOf(selectedAssessment);
                                 repo.deleteAssessment(selectedAssessment);
-                                allAssessments.clear();
-                                allAssessments.addAll(repo.getAllAssessments());
-                                assessmentAdapter.notifyItemRemoved(previouslySelected);
-                                assessmentAdapter.checkedPosition = -1;
+                                allAssessments.remove(selectedAssessment);
+
+                                assessmentAdapter.notifyItemRemoved(selectedAssessmentIndex);
+                                assessmentAdapter.checkedPosition = -1; //Resets adapter position so old value does not stick.
+                                selectedAssessment = null;
 
                             }
 

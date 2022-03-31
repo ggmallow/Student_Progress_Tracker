@@ -164,6 +164,7 @@ public class Terms extends AppCompatActivity implements TermAdapter.OnTermListen
                         repo.deleteTerm(selectedTerm);
                         allTermsList.remove(selectedTerm);
                         termAdapter.notifyItemRemoved(selectedTermIndex);
+                        termAdapter.checkedPosition = -1;
                         selectedTerm = null;
 
                     }
