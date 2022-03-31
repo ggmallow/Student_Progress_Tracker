@@ -306,9 +306,118 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/instructor"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.49"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/status" />
+
+                <TextView
+                    android:id="@+id/courseTitleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Course Title"
+                    app:layout_constraintBottom_toTopOf="@+id/courseTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/startDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="Start Date"
+                    app:layout_constraintBottom_toTopOf="@+id/startDate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/courseTitle"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/endDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="End Date"
+                    app:layout_constraintBottom_toTopOf="@+id/endDate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.48"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/startDate"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/statusLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="Status"
+                    app:layout_constraintBottom_toTopOf="@+id/status"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.487"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/endDate"
+                    app:layout_constraintVertical_bias="1.0" />
+
+
+                <TextView
+                    android:id="@+id/instructorPhoneLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="Instructor Phone"
+                    app:layout_constraintBottom_toTopOf="@+id/instructorPhone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.487"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/instructor"
+                    app:layout_constraintVertical_bias="1.0" />
+
+
+
+                <TextView
+                    android:id="@+id/instructorEmailLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="Instructor Email"
+                    app:layout_constraintBottom_toTopOf="@+id/instructorEmail"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.487"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/instructorPhone"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/courseNotesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="325dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="325dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="Course Notes"
+                    app:layout_constraintBottom_toTopOf="@+id/courseNotes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.463"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayoutAssessments"
+                    app:layout_constraintVertical_bias="0.75" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
