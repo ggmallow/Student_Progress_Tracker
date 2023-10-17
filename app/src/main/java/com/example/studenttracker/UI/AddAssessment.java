@@ -106,7 +106,7 @@ public class AddAssessment extends AppCompatActivity {
         int assessmentID = getIntent().getExtras().getInt("assessmentID");
         Assessment modifiedAssessment = repo.getAssessmentByID(assessmentID);
 
-        if (modifiedAssessment.getAssessmentType().equals("Performance")) {
+        if ("Performance".equals(modifiedAssessment.getAssessmentType())) {
             performance.setChecked(true);
         } else {
             objective.setChecked(true);

@@ -230,17 +230,17 @@ public class AddCourse extends AppCompatActivity implements AdapterView.OnItemSe
                 modID = modifiedCourse.getCourseID();
 
 
-                if (modifiedCourse.getStatus().equals("In Progress")) {
+                if ("In Progress".equals(modifiedCourse.getStatus())) {
                     statusSpinner.setSelection(1);
                     } else
-                if (modifiedCourse.getStatus().equals("Completed")) {
+                if ("Completed".equals(modifiedCourse.getStatus())) {
                     statusSpinner.setSelection(2);
 
                     } else
-                if (modifiedCourse.getStatus().equals("Dropped")) {
+                if ("Dropped".equals(modifiedCourse.getStatus())) {
                     statusSpinner.setSelection(3);
                     } else
-                if (modifiedCourse.getStatus().equals("Plan to Take")) {
+                if ("Plan to Take".equals(modifiedCourse.getStatus())) {
                     statusSpinner.setSelection(4);
                     }
 
